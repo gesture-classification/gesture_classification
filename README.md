@@ -1,15 +1,17 @@
 # Motorica Advanced Gesture Classification
-## Продвинутая задача классификации жестов
-### [Kaggle competition](https://www.kaggle.com/competitions/motorica-advanced-gesture-classification/leaderboard?)
+
+Продвинутая [задача классификации жестов](https://www.kaggle.com/competitions/motorica-advanced-gesture-classification/leaderboard?)
 
 
 --------Структура проекта (новая)----------
 
-1. папка *notebooks* - для ноутбуков
-2. папка *logs_and_figures* - для графиков, логов работы модели, сабмиты
-3. папка source - содержит функции
+1. папка data - для данных
+2. папка *notebooks* - для ноутбуков
+3. папка *logs_and_figures* - для графиков, логов работы модели, сабмиты
+4. папка utils - содержит функции
    a. основные в файле lib1.py
    b. оспомогательные в файле lib2.py
+5. папка inference - 
 
 
 Дописать:
