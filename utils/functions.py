@@ -74,42 +74,6 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
 
 
 
-def get_all_sensors_plot(Pilot_id, timesteps:list, mounts, plot_counter=1):
-    """
-    Функция построения диаграммы показаний датчиков заданного временного периода. Аргументы функции:
-    Pilot_id - номер пилота;
-    timesteps - лист из двух временных периодов;
-    mounts - словарь с данными;
-    plot_counter - порядковый номер рисунка.
-    """
-    
-    X_train=mounts[Pilot_id]['X_train']
-
-    df = pd.DataFrame(
-        data = X_train, 
-        index = [s for s in range(X_train.shape[0])], 
-        columns = [s for s in range(X_train.shape[1])]
-    )
-    
-    fig = px.line(data_frame=df.iloc[timesteps[0]:timesteps[1],:])
-    
-    fig.update_layout(
-        title=dict(text=f'Рис. {plot_counter} - сигналы датчиков пилота {Pilot_id}', x=.5, y=0.05, xanchor='center'), 
-        xaxis_title_text = 'Время, сек', yaxis_title_text = 'Сигнал датчиков', # yaxis_range = [0, 3000],
-        legend_title_text='Индекс <br>датчика',
-        width=600, height=400,
-        margin=dict(l=100, r=60, t=80, b=100),
-    )
-
-    #fig.show()
-
-    # сохраним результат в папке figures. Если такой папки нет, то создадим её
-    if not os.path.exists("figures"):
-        os.mkdir("figures")
-
-    fig.write_image(f'figures/fig_{plot_counter}.png', engine="kaleido")
-
-
 def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_counter=1):
     """
     Функция построения графика показаний активных и пассивных датчиков. Аргументы функции:
