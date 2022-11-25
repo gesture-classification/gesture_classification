@@ -11,6 +11,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+
 # библиотеки машинного обучения
 from sklearn.metrics import f1_score
 from sklearn.model_selection import StratifiedKFold, cross_validate
@@ -58,6 +59,43 @@ mounts = {
     }
 }
 
+
+def get_sensor_list(Pilot_id, mounts, print_active=False):
+    """
+    Функция печати и импорта в память всех номеров датчиков
+    Аргументы функции:
+    Pilot_id - номер пилота,
+    mounts - словарь с данными. 
+    """
+    X_train=mounts[Pilot_id]['X_train']
+
+    df = pd.DataFrame(
+        data = X_train, 
+        index = [s for s in range(X_train.shape[0])], 
+        columns = [s for s in range(X_train.shape[1])]
+    ).T
+
+    
+    # Создадим список индексов активных и пассивных датчиков. Среднее значение сигнала не превышает 200 единиц.
+    active_sensors, passive_sensors = list(), list()
+      
+    for i in range(df.shape[0]):
+        # если средняя амплитуда превышает 200, то добавляем индекс в список 'active_sensors' (надежных датчиков). 
+        if df.iloc[i].mean() > 200:
+            active_sensors.append(i)
+        
+        #Остальные датчики с малой амплитудой - в список ненадёжных.      
+        else:
+            passive_sensors.append(i)
+
+    if print_active is True:
+        print(f"Активные датчики пилота " + str(Pilot_id) + ": ", active_sensors)
+        print(f"Пассивные датчики пилота " + str(Pilot_id) + ": ", passive_sensors) 
+    
+    return active_sensors, passive_sensors #, reliable_sensors, unreliable_sensors
+
+
+
 def get_signals_plot(data, test_id, plot_counter):
     """Функция отображения показаний датчиков наблюдений для каждого пилота
 
@@ -94,8 +132,6 @@ def get_signals_plot(data, test_id, plot_counter):
         plt.show();
 
         break
-
-
 
 
 
@@ -144,6 +180,8 @@ def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_count
     mounts - словарь с данными;
     plot_counter - порядковый номер рисунка.  
     """
+    #get_sensor_list()
+    
     X_train=mounts[Pilot_id]['X_train']
 
     df = pd.DataFrame(
@@ -188,7 +226,8 @@ def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_count
 
     #fig.show()
 
-    fig.write_image(f'figures/fig_{plot_counter}.png', engine="kaleido")
+    fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
+    
 
 def plot_history(history):
     
@@ -273,8 +312,9 @@ def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_
 
 
 def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts, plot_counter=1):
-    """
-    Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста. Агументы:
+    """ Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста. 
+    
+    -----Агументы:-------------
     Pilot_id - номер пилота;
     timesteps - список из двух временных периодов;
     sensors - список датчиков;
@@ -326,14 +366,16 @@ def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts, p
     )
     
     #fig.show()
-    fig.write_image(f'figures/fig_{plot_counter}.png', engine="kaleido")
+    
+    # сохранение иллюстрации
+    fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
 
 
 def get_signal_derivative_and_normalized_plot(Pilot_id, timesteps:list, sensors:list, mounts, plot_counter=1):
 
-    """
-    Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста, вероятности появления жеста и предсказание.
-    Агументы:
+    """Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста, вероятности появления жеста и предсказание.
+    
+    ------Агументы:---------
     Pilot_id - номер пилота;
     timesteps - список из двух временных периодов;
     sensors - список датчиков;
@@ -396,4 +438,6 @@ def get_signal_derivative_and_normalized_plot(Pilot_id, timesteps:list, sensors:
     )
 
     #fig.show()
-    fig.write_image(f'figures/fig_{plot_counter}.png', engine="kaleido")
+    
+    # сохранение иллюстрации
+    fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
