@@ -61,9 +61,9 @@ mounts = {
 
 
 def get_sensor_list(Pilot_id, mounts, print_active=False):
-    """
-    Функция печати и импорта в память всех номеров датчиков
-    Аргументы функции:
+    """ Функция печати и импорта в память всех номеров датчиков.
+    
+    ---Аргументы функции:-----
     Pilot_id - номер пилота,
     mounts - словарь с данными. 
     """
@@ -92,7 +92,7 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
         print(f"Активные датчики пилота " + str(Pilot_id) + ": ", active_sensors)
         print(f"Пассивные датчики пилота " + str(Pilot_id) + ": ", passive_sensors) 
     
-    return active_sensors, passive_sensors #, reliable_sensors, unreliable_sensors
+    return active_sensors, passive_sensors 
 
 
 
@@ -441,3 +441,45 @@ def get_signal_derivative_and_normalized_plot(Pilot_id, timesteps:list, sensors:
     
     # сохранение иллюстрации
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
+    
+    
+def get_display_data(mounts, plot_counter):
+    """Функция отображения тренировочных данных (X_train, y_train)) для всех пилотов в датасете
+    ------Агументы:---------
+    mounts (dict) - словарь, содержащий словари с данными: X_train, y_train, x_test
+    plot_counter (int) - номер диаграммы
+    """    
+    for mount_name, mount in mounts.items():
+        X_train = mount['X_train']
+        y_train = mount['y_train']
+        
+        # выбор моментов, где происходит изменение y_train
+        events = np.where(np.abs(np.diff(y_train)) > 0)[0]
+        
+        fig, axx = plt.subplots(2, 1, sharex=True, figsize=(12, 5))
+        plt.sca(axx[0])
+        plt.plot(X_train, lw=0.5)
+        plt.title(f'X_train #{mount_name}')
+        yl = plt.ylim()
+        plt.vlines(events, *yl, color='r', lw=0.5, alpha=0.5)
+        
+        plt.sca(axx[1])
+        plt.plot(y_train, lw=0.5)
+        plt.title('y_train')
+        yl = plt.ylim()
+        plt.vlines(events, *yl, color='r', lw=0.5, alpha=0.5)
+        plt.yticks(
+            np.arange(-1, 5),
+            ['Bad data', 'Open', 'Pistol', 'Thumb', 'OK', 'Grab']
+        )
+        plt.grid(axis='y')
+        
+        plt.title(f"Y_train #{mount_name}") 
+        
+        plt.tight_layout()
+        #plt.show()
+    fig.suptitle(f"Рис. {plot_counter} - Сигналы датчиков и классы жестов", y=-0.1, fontsize=12);    
+    
+        
+    #plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
+    
