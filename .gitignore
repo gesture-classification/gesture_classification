@@ -43,3 +43,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Данные доступа к komet.ml
+credentials.*
