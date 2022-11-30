@@ -477,9 +477,8 @@ def get_display_data(mounts, plot_counter):
         plt.title(f"Y_train #{mount_name}") 
         
         plt.tight_layout()
-        #plt.show()
+    plt.show()
     fig.suptitle(f"Рис. {plot_counter} - Сигналы датчиков и классы жестов", y=-0.1, fontsize=12);    
     
-        
-    #plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
+    plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
     
