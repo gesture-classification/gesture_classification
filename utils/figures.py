@@ -258,7 +258,7 @@ def plot_history(history, plot_counter):
     fig.suptitle(f"Рис. {plot_counter} - Ход обучения модели", y=-0.1, fontsize=14)
               
     fig.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
-    fig.show();
+    #fig.show(); - не вызывать для корретного логгирования
 
 
 def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_counter):
