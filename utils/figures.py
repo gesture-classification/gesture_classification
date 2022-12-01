@@ -108,7 +108,7 @@ def get_signals_plot(data, test_id, plot_counter):
     for mount_name, mount in mounts.items():
         X_test_dataset = data
         
-        fig, axx = plt.subplots(3, 1, sharex=True, figsize=(12, 5))
+        fig, axx = plt.subplots(3, 1, sharex=True, figsize=(10, 5))
 
         test_id = 3  # номер наблюдения 
         plt.sca(axx[0])
@@ -125,11 +125,11 @@ def get_signals_plot(data, test_id, plot_counter):
         plt.plot(X_test_dataset[test_id].T, lw=0.5)
         plt.title(f'Размер наблюдения: {X_test_dataset[test_id][mount_name].T.shape[0]} временных промежутков')
         
-        plt.suptitle(f"Рис. {plot_counter} - Сигналы датчиков в наблюдениях  пилота {mount_name}", y=-0.1, fontsize=16)
+        plt.suptitle(f"Рис. {plot_counter} - Сигналы датчиков в наблюдениях  пилота {mount_name}", y=-0.1, fontsize=14)
         plt.tight_layout()
         
         plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
-        plt.show();
+        #plt.show(); - не вызывать для корретного логгирования
 
         break
 
@@ -229,7 +229,7 @@ def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_count
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
     
 
-def plot_history(history):
+def plot_history(history, plot_counter):
     
     """
     Функция визуализации процесса обучения модели       
@@ -252,15 +252,20 @@ def plot_history(history):
 
     ax[1].plot(epochs, f1_sc, 'b', label='Training f1_score')
     ax[1].plot(epochs, f1_sc_val, 'r', label='Training val_f1_score')
-    ax[1].set_title('Изменение f1_score') # изменение f1-score
+    ax[1].set_title(f"Изменение f1_score") # изменение f1-score
     ax[1].legend()
 
-    #fig.show()
+    fig.suptitle(f"Рис. {plot_counter} - Ход обучения модели", y=-0.1, fontsize=14)
+              
+    fig.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
+    #fig.show(); - не вызывать для корретного логгирования
+
 
 def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_counter):
-    """
-    Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста, вероятности появления жеста и предсказание класса жеста.
-    Агументы:
+    
+    """Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста, вероятности появления жеста и предсказание класса жеста.
+    
+    ----Агументы:----
     Pilot_id = 3  # номер пилота
     plot_counter = 1 # номер рисунка
     i - номер наблюдениия
@@ -308,6 +313,8 @@ def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_
     )
     ax[3].set_xlabel('Время')
     plt.tight_layout()
+    
+    plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
 
 
 
@@ -477,7 +484,8 @@ def get_display_data(mounts, plot_counter):
         plt.title(f"Y_train #{mount_name}") 
         
         plt.tight_layout()
-    plt.show()
+    
+    # plt.show() - не вызывать для корретного логгирования
     fig.suptitle(f"Рис. {plot_counter} - Сигналы датчиков и классы жестов", y=-0.1, fontsize=12);    
     
     plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
