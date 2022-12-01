@@ -108,7 +108,7 @@ def get_signals_plot(data, test_id, plot_counter):
     for mount_name, mount in mounts.items():
         X_test_dataset = data
         
-        fig, axx = plt.subplots(3, 1, sharex=True, figsize=(12, 5))
+        fig, axx = plt.subplots(3, 1, sharex=True, figsize=(10, 5))
 
         test_id = 3  # номер наблюдения 
         plt.sca(axx[0])
@@ -125,11 +125,11 @@ def get_signals_plot(data, test_id, plot_counter):
         plt.plot(X_test_dataset[test_id].T, lw=0.5)
         plt.title(f'Размер наблюдения: {X_test_dataset[test_id][mount_name].T.shape[0]} временных промежутков')
         
-        plt.suptitle(f"Рис. {plot_counter} - Сигналы датчиков в наблюдениях  пилота {mount_name}", y=-0.1, fontsize=16)
+        plt.suptitle(f"Рис. {plot_counter} - Сигналы датчиков в наблюдениях  пилота {mount_name}", y=-0.1, fontsize=14)
         plt.tight_layout()
         
         plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
-        plt.show();
+        #plt.show(); - не вызывать для корретного логгирования
 
         break
 
