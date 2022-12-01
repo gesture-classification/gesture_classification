@@ -313,6 +313,8 @@ def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_
     )
     ax[3].set_xlabel('Время')
     plt.tight_layout()
+    
+    plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
 
 
 
