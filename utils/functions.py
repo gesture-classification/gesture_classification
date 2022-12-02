@@ -41,37 +41,10 @@ gestures = ['"open"',  # 0
 ]
 
 
-def plot_history(history):
-    
-    """
-    Функция визуализации процесса обучения модели       
-    """
-    f1_sc = history.history['f1']  
-    loss = history.history['loss']
-
-    f1_sc_val = history.history['val_f1'] # на валидационной выборке
-    val_loss = history.history['val_loss']
-
-    epochs = range(len(f1_sc))
-
-    # визуализация систем координат
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(13, 4))
-
-    ax[0].plot(epochs, loss, 'b', label='Training loss')
-    ax[0].plot(epochs, val_loss, 'r', label='Validation loss')
-    ax[0].set_title('Качество обучения модели')
-    ax[0].legend()
-
-    ax[1].plot(epochs, f1_sc, 'b', label='Training f1_score')
-    ax[1].plot(epochs, f1_sc_val, 'r', label='Training val_f1_score')
-    ax[1].set_title('Изменение f1_score') # изменение f1-score
-    ax[1].legend()
-
-    #fig.show()
-
 
 def f1(y_true, y_pred):
-        
+    # Функция для расчета метрики f1_score, Precision, Recall
+    
     def recall(y_true, y_pred):
         """
         Recall metric.
@@ -104,7 +77,10 @@ def f1(y_true, y_pred):
 
 
 # Callbacks that used for training model
-def callbacks(lr, num_train, PATH_BEST_MODEL='logs_and_figures'):
+def callbacks(lr, num_train, PATH_BEST_MODEL='/gesture_classification/models/'):  #
+    # Функция Callbacks, используемая при обучении модели, включающая
+    # checkpoint - сохранение лучшей модели
+    
     
     checkpoint = ModelCheckpoint(
         os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
