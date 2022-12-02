@@ -20,7 +20,7 @@
 * определение момента начала жеста. 
 
 <p align="center"> 
-   <img src="/logs_and_figures/fig_0-1.PNG">
+   <img src="/logs_and_figures/fig_0-1.PNG" height=300>
 </p>
 
 
