@@ -14,10 +14,9 @@
 
 
 ## Введение
-
-[В ходе соревнования на Kaggle](https://www.kaggle.com/competitions/motorica-advanced-gesture-classification/leaderboard?) нами была создана математическая модель, предсказывающая жест человека по сокращению мышц предплечья. Модель может использоваться для управления автоматизированным протезом кисти. Задача исследования заключалась в следующем:
+<p align="justify">[В ходе соревнования на Kaggle](https://www.kaggle.com/competitions/motorica-advanced-gesture-classification/leaderboard?) нами была создана математическая модель, предсказывающая жест человека по сокращению мышц предплечья. Модель может использоваться для управления автоматизированным протезом кисти. Задача исследования заключалась в следующем:</p>
 * классификация жеста по показаниям показаниям датчиков оптомиографии с поверхности кожи предплечья;
-* определение момента начала жеста. 
+* определение момента начала жеста.
 
 <p align="center"> 
    <img src="/logs_and_figures/fig_0-1.PNG" height=300>
@@ -47,7 +46,7 @@
 
 ![Raw data](/logs_and_figures/fig_2-1.png)
 
-# Инференс 
+## Инференс 
 ```
 git clone https://github.com/gesture-classification/gesture_classification
 pip install -r -q requirements.txt
