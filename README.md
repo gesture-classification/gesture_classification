@@ -64,7 +64,7 @@ python main.py
 ![активные и пассивные датчики](/logs_and_figures/fig_1-3.png)
 
 * нормализация сигналов датчиков и взятии производной от функции не позволил однозначно определить временной интервал начала жеста.
-<p align="center">   <img src="/logs_and_figures/fig_1-4.png"> </p>
+<p align="center">   <img src="/logs_and_figures/fig_1-5.png"> </p>
 
 Сравнительный анализ предсказаний моделей до и после предобработки показал, что все методы, кроме первого, ухудшают качество предсказания. Поэтому было решено отказаться от второго этапа и обучать модель на "сырых" данных. ([*см. ноутбук 1_EDA_sprint_3.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/1_EDA_sprint_3.ipynb)). 
 
