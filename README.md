@@ -1,6 +1,7 @@
 # Motorica Advanced Gesture Classification
 
 ## Оглавление
+
 * [Введение](README.md#Введение)
 * [Структура проекта](README.md#Структура-проекта)
 * [Экспериментальные данные](README.md#Экспериментальные-данные)
@@ -80,6 +81,7 @@
 
 
 # Метод получения инференса 
+
 git clone https://github.com/gesture-classification/gesture_classification
 pip install -r -q requirements.txt
 python main.py 
