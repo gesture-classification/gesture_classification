@@ -59,6 +59,17 @@ mounts = {
     }
 }
 
+def get_dataframe(data):
+    """
+    Функция создания датафрейма из данных словаря
+    """
+    df = pd.DataFrame(
+        data = data, 
+        index = [s for s in range(data.shape[0])], 
+        columns = [s for s in range(data.shape[1])]
+    )
+    
+    return df
 
 def get_sensor_list(Pilot_id, mounts, print_active=False):
     """ Функция печати и импорта в память всех номеров датчиков.
@@ -69,11 +80,7 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
     """
     X_train=mounts[Pilot_id]['X_train']
 
-    df = pd.DataFrame(
-        data = X_train, 
-        index = [s for s in range(X_train.shape[0])], 
-        columns = [s for s in range(X_train.shape[1])]
-    ).T
+    df = get_dataframe(X_train).T
 
     
     # Создадим список индексов активных и пассивных датчиков. Среднее значение сигнала не превышает 200 единиц.
@@ -146,11 +153,7 @@ def get_all_sensors_plot(data, Pilot_id, timesteps:list, mounts, plot_counter=1)
     
     X_train=mounts[Pilot_id][data]
 
-    df = pd.DataFrame(
-        data = X_train, 
-        index = [s for s in range(X_train.shape[0])], 
-        columns = [s for s in range(X_train.shape[1])]
-    )
+    df = get_dataframe(X_train)
     
     fig = go.Figure()
     fig = px.line(data_frame=df.iloc[timesteps[0]:timesteps[1],:])
@@ -184,22 +187,11 @@ def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_count
     
     X_train=mounts[Pilot_id]['X_train']
 
-    df = pd.DataFrame(
-        data = X_train, 
-        index = [s for s in range(X_train.shape[0])], 
-        columns = [s for s in range(X_train.shape[1])]
-    )
-
+    
     # списки сенсоров
-    active_sensors, passive_sensors = get_sensor_list(Pilot_id, mounts)  #, print_active=True
+    active_sensors, passive_sensors = get_sensor_list(Pilot_id, mounts)
 
-    #timesteps=[time_start, time_end]
-
-    df = pd.DataFrame(
-        data = X_train, 
-        index = [s for s in range(X_train.shape[0])], 
-        columns = [s for s in range(X_train.shape[1])]
-    ).iloc[timesteps[0]:timesteps[1],:]
+    df = get_dataframe(X_train).iloc[timesteps[0]:timesteps[1],:]
     
         
     df_1 = pd.DataFrame(df[active_sensors], columns=active_sensors)
@@ -258,7 +250,7 @@ def plot_history(history, plot_counter):
     fig.suptitle(f"Рис. {plot_counter} - Ход обучения модели", y=-0.1, fontsize=14)
               
     fig.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
-    #fig.show(); - не вызывать для корретного логгирования
+    #fig.show(); #- не вызывать для корретного логгирования
 
 
 def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_counter):
@@ -332,17 +324,12 @@ def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts, p
     y_train=mounts[Pilot_id]['y_train']
 
     
-    df_1 = pd.DataFrame(
-        data = X_train, 
-        index = [s for s in range(X_train.shape[0])], 
-        columns = [s for s in range(X_train.shape[1])]
-    ).iloc[timesteps[0]:timesteps[1],:][sensors]
-
+    df_1 = get_dataframe(X_train).iloc[timesteps[0]:timesteps[1],:][sensors]
 
     df_2 = pd.DataFrame(
-        data = y_train, 
-        index = [s for s in range(y_train.shape[0])]
-    ).iloc[timesteps[0]:timesteps[1],:]
+            data = y_train, 
+            index = [s for s in range(y_train.shape[0])]
+        ).iloc[timesteps[0]:timesteps[1],:]
 
     
     fig = make_subplots(rows=2, cols=1, 
@@ -391,11 +378,7 @@ def get_signal_derivative_and_normalized_plot(Pilot_id, timesteps:list, sensors:
     """
     X_train=mounts[Pilot_id]['X_train']
         
-    df_1 = pd.DataFrame(
-        data = X_train, 
-        index = [s for s in range(X_train.shape[0])], 
-        columns = [s for s in range(X_train.shape[1])]
-    ).iloc[timesteps[0]:timesteps[1],:][sensors]
+    df_1 = get_dataframe(X_train).iloc[timesteps[0]:timesteps[1],:][sensors]
 
     # Нормализация данных
     scaler = StandardScaler()
