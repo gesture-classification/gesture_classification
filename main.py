@@ -16,6 +16,6 @@ if __name__ == "__main__":
     print('Data loaded!', end='\n\n')
     
     print('Predicting test data ...')
-    path_to_models_weights = 'models_weights'
+    path_to_models_weights = 'gesture_classifiaction/models/models_weights'  # было models_weights
     y_test_submit = MakeInference(mounts, y_test, path_to_models_weights).make_inference()
     print(f'y_test_submit_from_inference.csv created in folder: logs_and_figures')
