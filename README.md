@@ -25,22 +25,25 @@
 
 
 ## Структура проекта
+
 <details>
   <summary> Посмотреть структуру папок и файлов </summary>
+
+```Python
 gesture_classification
 ├── .git
 ├── .gitignore
-├── data 
+├── data             # содержит архив с исходными данными
 │   └── motorica-advanced-gesture-classification.zip
 ├── dockerfile
-├── logs_and_figures
+├── logs_and_figures # содержит графики, логи работы модели, сабмиты
 │   ├── fig_0-1.PNG
 ...
 │   ├── fig_2-5.png
 │   ├── y_test_submit_rnn_LSTM(0.69641).csv
 │   └── y_test_submit_rnn_LSTM.csv
 ├── main.py
-├── models
+├── models           # модели проекта и их коэффициенты 
 │   ├── best_model_rnn_1.hdf5
 │   ├── best_model_rnn_2.hdf5
 │   ├── best_model_rnn_3.hdf5
@@ -52,14 +55,14 @@ gesture_classification
 │   ├── srnn.py
 │   ├── temp_best_model
 │   └── weights
-├── notebooks
+├── notebooks        # ноутбуки проекта
 │   ├── .cometml-runs
 │   ├── 1_EDA_sprint_3.ipynb
 │   ├── 2_model_SRNN_LSTM.ipynb
 │   └── 3_boxplots_clear_gests_sens_gest.ipynb
 ├── README.md
-├── requirements.txt
-└── utils
+├── requirements.txt 
+└── utils            # основные и вспомогательные функции, константы, загрузчик данных
     ├── credentials.json
     ├── data_reader.py
     ├── figures.py
@@ -67,7 +70,7 @@ gesture_classification
     ├── inference.py
     ├── __ init __.py
     └── __pycache__
-
+```
 </details>
 
 
