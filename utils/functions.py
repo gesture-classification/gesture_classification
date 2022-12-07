@@ -77,7 +77,7 @@ def f1(y_true, y_pred):
 
 
 # Callbacks that used for training model
-def callbacks(lr, num_train, PATH_BEST_MODEL='/gesture_classification/models/'):  #
+def callbacks(lr, num_train, reduce_patience=15, stop_patience=200, PATH_BEST_MODEL='/gesture_classification/models/'):  #
     # Функция Callbacks, используемая при обучении модели, включающая
     # checkpoint - сохранение лучшей модели
     
@@ -93,7 +93,7 @@ def callbacks(lr, num_train, PATH_BEST_MODEL='/gesture_classification/models/'):
     earlystop = EarlyStopping(
         monitor='val_f1', 
         mode='max', 
-        patience=150, 
+        patience=stop_patience, 
         restore_best_weights=True
     )
 
@@ -101,7 +101,7 @@ def callbacks(lr, num_train, PATH_BEST_MODEL='/gesture_classification/models/'):
         monitor='val_f1', 
         mode='max', 
         factor=0.9, 
-        patience=15, # можно 10
+        patience=reduce_patience, # можно 10
         verbose=1, 
         min_lr=lr/10000
     )
