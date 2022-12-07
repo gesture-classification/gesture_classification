@@ -53,8 +53,8 @@
 
 ## Установка
 1. Скопируйте репозиторий, введя в терминале следующие команды:
-```
-$\color{gray}{# Clone repository and install requirements}$
+```Python
+# Clone repository and install requirements
 
 git clone https://github.com/gesture-classification/gesture_classification
 pip install -r -q requirements.txt
