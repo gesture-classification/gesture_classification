@@ -102,7 +102,6 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
     return active_sensors, passive_sensors 
 
 
-
 def get_signals_plot(data, test_id, plot_counter):
     """Функция отображения показаний датчиков наблюдений для каждого пилота
 
@@ -139,7 +138,6 @@ def get_signals_plot(data, test_id, plot_counter):
         #plt.show(); - не вызывать для корретного логгирования
 
         break
-
 
 
 def get_all_sensors_plot(data, Pilot_id, timesteps:list, mounts, plot_counter=1):
@@ -235,7 +233,7 @@ def plot_history(history, plot_counter):
     epochs = range(len(f1_sc))
 
     # визуализация систем координат
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(13, 4))
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(11, 3.5))
 
     ax[0].plot(epochs, loss, 'b', label='Training loss')
     ax[0].plot(epochs, val_loss, 'r', label='Validation loss')
