@@ -25,16 +25,51 @@
 
 
 ## Структура проекта
+<details>
+  <summary> Посмотреть структуру папок и файлов </summary>
+gesture_classification
+├── .git
+├── .gitignore
+├── data 
+│   └── motorica-advanced-gesture-classification.zip
+├── dockerfile
+├── logs_and_figures
+│   ├── fig_0-1.PNG
+...
+│   ├── fig_2-5.png
+│   ├── y_test_submit_rnn_LSTM(0.69641).csv
+│   └── y_test_submit_rnn_LSTM.csv
+├── main.py
+├── models
+│   ├── best_model_rnn_1.hdf5
+│   ├── best_model_rnn_2.hdf5
+│   ├── best_model_rnn_3.hdf5
+│   ├── lstm.py
+│   ├── model.py
+│   ├── model_lstm_1
+│   ├── model_lstm_2
+│   ├── model_lstm_3
+│   ├── srnn.py
+│   ├── temp_best_model
+│   └── weights
+├── notebooks
+│   ├── .cometml-runs
+│   ├── 1_EDA_sprint_3.ipynb
+│   ├── 2_model_SRNN_LSTM.ipynb
+│   └── 3_boxplots_clear_gests_sens_gest.ipynb
+├── README.md
+├── requirements.txt
+└── utils
+    ├── credentials.json
+    ├── data_reader.py
+    ├── figures.py
+    ├── functions.py
+    ├── inference.py
+    ├── __ init __.py
+    └── __pycache__
 
-* папка *data* - содержит архив с исходными данными
-* папка *logs_and_figures* - содержит графики, логи работы модели, сабмиты
-* папка *models* - модели проекта и их коэффициенты 
-* папка *notebooks* - ноутбуков проекта
-* папка utils - содержит функции
-    * основные в файле *functions.py*
-    * вспомогательные в файле *figures.py*
+</details>
 
-:arrow_up:[Оглавление](README.md#оглавление)
 
 ## Экспериментальные данные
 
@@ -98,9 +133,7 @@ pip install -r -q requirements.txt
 
 ![график обучения второй модели](/logs_and_figures/fig_2-4.png)
 
-<p align="center"> 
-   Рис.2-4 - график обучения модели LSTM.
-</p>
+<p align="center">  Рис.2-4 - график обучения модели LSTM. </p>
 
 :arrow_up:[Оглавление](README.md#оглавление)
 
