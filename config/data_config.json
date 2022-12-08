@@ -1,0 +1,14 @@
+{
+  "path_to_x_trn" : "data/X_train_3.npy",
+  "path_to_y_trn" : "data/y_train_3.npy",
+  "path_to_x_tst" : "data/X_test_dataset_3.pkl",
+  "path_to_models_weights" : "models_weights/model_lstm_3",
+  "points" : 1000.0,
+  "point_to_time" : 33,
+  "tmin" : -1,
+  "tmax" : 2.5
+
+
+
+
+}

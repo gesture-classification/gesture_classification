@@ -1,16 +1,14 @@
-FROM python:3.10.8-alpine
+# Пересобирать TF без AWS!!!
+FROM python:3.10
 
-WORKDIR /gesture_classification
-
-COPY ./data ./
-COPY ./models_weights ./
-COPY requirements.txt ./
-COPY main.py ./
-
+COPY ./data ./data
+COPY ./models_weights ./models_weights
+COPY ./utils ./utils
+COPY ./req_inference.txt ./req_inference.txt
+COPY ./main.py ./main.py
 RUN ["mkdir", "./logs_and_figures"]
-#ADD https://github.com/gesture-classification/gesture_classification/blob/main/data/motorica-advanced-gesture-classification.zip \
-#./logs_and_figures 
 
-RUN pip install --no-cache-dir -r requirements.txt
+#RUN pip3 install --trusted-host=pypi.python.org --trusted-host=pypi.org --trusted-host=files.pythonhosted.org tensorflow-cpu==2.9.2
+RUN pip install --no-cache-dir -r ./req_inference.txt
 
 CMD ["python", "./main.py"]
