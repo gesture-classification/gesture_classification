@@ -6,9 +6,20 @@
   "points" : 1000.0,
   "point_to_time" : 33,
   "tmin" : -1,
-  "tmax" : 2.5
+  "tmax" : 2.5,
+
+  "gestures": [
+    "open", 
+    "pistol",  
+    "thumb tilts", 
+    "ok",  
+    "grab",  
+    "bad data"  
+  ],
 
 
-
+  
+  "reduce_patience":15
 
 }
+
