@@ -10,9 +10,13 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 
+from utils.reader_config import read_config
+
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 #from plotly.subplots import make_subplots
+
+
 
 # библиотеки машинного обучения
 #from sklearn.metrics import f1_score
@@ -31,16 +35,9 @@ if not sys.warnoptions:
 
 import os
 
+config = read_config('../config/data_config.json')
 
-gestures = ['"open"',  # 0
-            '"пистолет"',  # 1
-            'сгиб большого пальца',  # 2
-            '"ok"',  # 3
-            '"grab"',  # 4
-            '"битые" данные',  # -1
-]
-
-
+gestures = read_config('../config/data_config.json')['gestures']
 
 def f1(y_true, y_pred):
     # Функция для расчета метрики f1_score, Precision, Recall
@@ -77,7 +74,7 @@ def f1(y_true, y_pred):
 
 
 # Callbacks that used for training model
-def callbacks(lr, num_train, reduce_patience=15, stop_patience=200, PATH_BEST_MODEL='/gesture_classification/models/'):  #
+def callbacks(lr, num_train, reduce_patience=config['reduce_patience'], stop_patience=200, PATH_BEST_MODEL='/gesture_classification/models/'):  #
     # Функция Callbacks, используемая при обучении модели, включающая
     # checkpoint - сохранение лучшей модели
     

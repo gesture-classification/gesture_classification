@@ -280,7 +280,7 @@ def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_
 
     ax[1].imshow(y_train_nn[i].T, origin="lower")
     ax[1].set_aspect('auto')
-    ax[1].set_title('Класс / жест')
+    ax[1].set_title('Класс жеста манипулятора')
     ax[1].set_yticks(
         np.arange(5),
         ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
