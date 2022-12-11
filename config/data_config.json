@@ -2,7 +2,7 @@
   "path_to_x_trn" : "data/X_train_2.npy",
   "path_to_y_trn" : "data/y_train_2.npy",
   "path_to_x_tst" : "data/X_test_dataset_2.pkl",
-  "path_to_models_weights" : "models/model_lstm_2_1",
+  "path_to_models_weights" : "models/model_lstm_2",
   "points" : 1000.0,
   "point_to_time" : 33,
   "tmin" : -1,
