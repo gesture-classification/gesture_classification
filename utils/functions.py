@@ -37,11 +37,13 @@ import os
 
 config = read_config('../config/data_config.json')
 
-gestures = read_config('../config/data_config.json')['gestures']
+gestures = config['gestures']
 
 def f1(y_true, y_pred):
     # Функция для расчета метрики f1_score, Precision, Recall
     
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+
     def recall(y_true, y_pred):
         """
         Recall metric.
@@ -50,7 +52,6 @@ def f1(y_true, y_pred):
         how many relevant items are selected.
         see: https://stackoverflow.com/questions/66554207/calculating-micro-f-1-score-in-keras
         """
-        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
         possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
         recall = true_positives / (possible_positives + K.epsilon())
         return recall
@@ -62,7 +63,6 @@ def f1(y_true, y_pred):
         Computes the precision, a metric for multi-label classification of
         how many selected items are relevant.
         """
-        true_positives = K.sum(K.round(K.clip(y_true*y_pred, 0, 1)))
         predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
         precision = true_positives/(predicted_positives + K.epsilon())
         return precision
@@ -74,33 +74,39 @@ def f1(y_true, y_pred):
 
 
 # Callbacks that used for training model
-def callbacks(lr, num_train, reduce_patience=config['reduce_patience'], stop_patience=200, PATH_BEST_MODEL='/gesture_classification/models/'):  #
+def callbacks(
+    lr,
+    num_train, 
+    reduce_patience=config['reduce_patience'], 
+    stop_patience=config["stop_patience"], 
+    PATH_BEST_MODEL=config["PATH_BEST_MODEL"]
+):  #
     # Функция Callbacks, используемая при обучении модели, включающая
     # checkpoint - сохранение лучшей модели
-    
+        
     
     checkpoint = ModelCheckpoint(
         os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
-        monitor='val_f1', 
-        verbose=1, 
-        mode='max', 
-        save_best_only=True
+        monitor=config["ModelCheckpoint"]["monitor"], 
+        verbose=config["ModelCheckpoint"]["verbose"], 
+        mode=config["ModelCheckpoint"]["mode"], 
+        save_best_only=config["ModelCheckpoint"]["save_best_only"]
     )
 
     earlystop = EarlyStopping(
-        monitor='val_f1', 
-        mode='max', 
+        monitor=config["EarlyStopping"]["monitor"], 
+        mode=config["EarlyStopping"]["mode"], 
         patience=stop_patience, 
-        restore_best_weights=True
+        restore_best_weights=config["EarlyStopping"]["restore_best_weights"]
     )
 
     reduce_lr = ReduceLROnPlateau(
-        monitor='val_f1', 
-        mode='max', 
-        factor=0.9, 
+        monitor=config["ReduceLROnPlateau"]["monitor"], 
+        mode=config["ReduceLROnPlateau"]["mode"],  
+        factor=config["ReduceLROnPlateau"]["factor"], 
         patience=reduce_patience, # можно 10
-        verbose=1, 
-        min_lr=lr/10000
+        verbose=config["ReduceLROnPlateau"]["verbose"], 
+        min_lr=lr/config["ReduceLROnPlateau"]["min_lr_coeff"]
     )
     
     return [checkpoint, earlystop, reduce_lr]
