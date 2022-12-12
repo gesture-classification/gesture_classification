@@ -34,10 +34,12 @@ config = read_config('../config/data_config.json')
 # Словарь c названиями файлов в архиве для агрегации данных 
 mounts = config['mounts']
 
-def get_dataframe(data):
+def get_dataframe(Pilot_id, mounts, data='X_train'):
     """
     Функция создания датафрейма из данных словаря
     """
+    data = mounts[Pilot_id][data]
+    
     df = pd.DataFrame(
         data = data, 
         index = [s for s in range(data.shape[0])], 
@@ -53,9 +55,8 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
     Pilot_id - номер пилота,
     mounts - словарь с данными. 
     """
-    X_train=mounts[Pilot_id]['X_train']
-
-    df = get_dataframe(X_train).T
+    
+    df = get_dataframe(Pilot_id, mounts=mounts).T
 
     
     # Создадим список индексов активных и пассивных датчиков. Среднее значение сигнала не превышает 200 единиц.
@@ -106,7 +107,7 @@ def get_signals_plot(data, mounts, test_id:list, plot_counter):
         break
 
 
-def get_all_sensors_plot(data, Pilot_id, timesteps:list, mounts, plot_counter=1):
+def get_all_sensors_plot(Pilot_id, timesteps:list, mounts, plot_counter=1):
     """
     Функция построения диаграммы показаний датчиков заданного временного периода. Аргументы функции:
     Pilot_id - номер пилота;
@@ -115,9 +116,7 @@ def get_all_sensors_plot(data, Pilot_id, timesteps:list, mounts, plot_counter=1)
     plot_counter - порядковый номер рисунка.
     """
     
-    X_train=mounts[Pilot_id][data]
-
-    df = get_dataframe(X_train)
+    df = get_dataframe(Pilot_id, mounts=mounts)
     
     fig = go.Figure()
     fig = px.line(data_frame=df.iloc[timesteps[0]:timesteps[1],:])
@@ -147,15 +146,11 @@ def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_count
     mounts - словарь с данными;
     plot_counter - порядковый номер рисунка.  
     """
-    #get_sensor_list()
-    
-    X_train=mounts[Pilot_id]['X_train']
-
-    
+      
     # списки сенсоров
-    active_sensors, passive_sensors = get_sensor_list(Pilot_id, mounts)
+    active_sensors, passive_sensors = get_sensor_list(Pilot_id=Pilot_id, mounts=mounts)
 
-    df = get_dataframe(X_train).iloc[timesteps[0]:timesteps[1],:]
+    df = get_dataframe(Pilot_id, mounts=mounts).iloc[timesteps[0]:timesteps[1],:]
     
         
     df_1 = pd.DataFrame(df[active_sensors], columns=active_sensors)
@@ -228,14 +223,12 @@ def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_
     mounts - словарь с данными
     """
     
-    mount = mounts[Pilot_id]         # выбираем номер пилота
-    X_train_nn = mount['X_train_nn']
-    y_train_nn = mount['y_train_nn']
-    #y_pred_train_nn = mount['y_pred_train_nn']
-    #y_pred_train_nn_mean = np.mean(x_trn_pred_dict[Pilot_id], axis=0)
+    X_train_nn = mounts[Pilot_id]['X_train_nn']
+    y_train_nn = mounts[Pilot_id]['y_train_nn']
+    
 
     fig, ax = plt.subplots(4, 1, sharex=True, figsize=(10, 8))
-    plt.suptitle(f'Рис. {plot_counter} - наблюдение {i} пилота {Pilot_id}' , y=-0.01, fontsize=16)
+    plt.suptitle(f'Рис. {plot_counter} - наблюдение {i} пилота {Pilot_id}' , y=-0.01, fontsize=14)
     
     plt.subplots_adjust(  left=0.1,   right=0.9,
                         bottom=0.1,     top=0.9,
@@ -248,30 +241,26 @@ def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_
     ax[1].set_aspect('auto')
     ax[1].set_title('Класс жеста манипулятора')
     ax[1].set_yticks(
-        np.arange(5),
-        ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
+        np.arange(5),  ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
     )
 
     ax[2].imshow(y_pred_train_nn_mean[i].T, origin="lower")
     ax[2].set_aspect('auto')
     ax[2].set_title('Предсказание вероятностей появления классов жестов')
     ax[2].set_yticks(
-        np.arange(5),
-        ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
+        np.arange(5), ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
     )
 
     ax[3].plot(y_pred_train_nn_mean[i].argmax(axis=-1))
     ax[3].set_aspect('auto')
     ax[3].set_title('Предсказание классов жестов')
     ax[3].set_yticks(
-        np.arange(5),
-        ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
+        np.arange(5), ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
     )
     ax[3].set_xlabel('Время')
     plt.tight_layout()
     
     plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
-
 
 
 def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts, plot_counter=1):
@@ -284,12 +273,10 @@ def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts, p
     mounts - словарь с данными;
     plot_counter - номер рисунка.
     """
-    X_train=mounts[Pilot_id]['X_train']
-    y_train=mounts[Pilot_id]['y_train']
-
+    df_1 = get_dataframe(Pilot_id, mounts=mounts).iloc[timesteps[0]:timesteps[1],:][sensors]
     
-    df_1 = get_dataframe(X_train).iloc[timesteps[0]:timesteps[1],:][sensors]
-
+    y_train=mounts[Pilot_id]['y_train']
+    
     df_2 = pd.DataFrame(
             data = y_train, 
             index = [s for s in range(y_train.shape[0])]
@@ -340,9 +327,9 @@ def get_signal_derivative_and_normalized_plot(Pilot_id, timesteps:list, sensors:
     mounts - словарь с данными;
     plot_counter - номер рисунка.
     """
-    X_train=mounts[Pilot_id]['X_train']
-        
-    df_1 = get_dataframe(X_train).iloc[timesteps[0]:timesteps[1],:][sensors]
+    #X_train=mounts[Pilot_id]['X_train']
+
+    df_1 = get_dataframe(Pilot_id, mounts=mounts).iloc[timesteps[0]:timesteps[1],:][sensors]
 
     # Нормализация данных
     scaler = StandardScaler()
