@@ -1,31 +1,9 @@
-# Файл для хранения функций третьего этапа соревнований от Моторики
-
 # Импортируем библиотеки
-import pandas as pd
-import numpy as np
-
-# графические библиотеки
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
-import plotly.graph_objects as go
 
 from utils.reader_config import read_config
 
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
-#from plotly.subplots import make_subplots
-
-
-
-# библиотеки машинного обучения
-#from sklearn.metrics import f1_score
-#from sklearn.model_selection import StratifiedKFold, cross_validate
-#from sklearn.linear_model import LogisticRegression
-#from sklearn.preprocessing import StandardScaler
-
-# отображать по умолчанию длину Датафрейма
-pd.set_option("display.max_rows", 9, "display.max_columns", 9)
 
 # библиотека взаимодействия с интерпретатором
 import sys
@@ -37,11 +15,9 @@ import os
 
 config = read_config('../config/data_config.json')
 
-gestures = config['gestures']
-
+# Функция для расчета метрики f1_score, Precision, Recall
 def f1(y_true, y_pred):
-    # Функция для расчета метрики f1_score, Precision, Recall
-    
+        
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
 
     def recall(y_true, y_pred):
@@ -72,19 +48,16 @@ def f1(y_true, y_pred):
 
     return 2*((precision*recall)/(precision + recall + K.epsilon()))
 
-
-# Callbacks that used for training model
+ # Функция Callbacks, используемая при обучении модели, включающая
+ # checkpoint - сохранение лучшей модели
 def callbacks(
     lr,
     num_train, 
     reduce_patience=config['reduce_patience'], 
     stop_patience=config["stop_patience"], 
     PATH_BEST_MODEL=config["PATH_BEST_MODEL"]
-):  #
-    # Функция Callbacks, используемая при обучении модели, включающая
-    # checkpoint - сохранение лучшей модели
-        
-    
+):  
+          
     checkpoint = ModelCheckpoint(
         os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
         monitor=config["ModelCheckpoint"]["monitor"], 
