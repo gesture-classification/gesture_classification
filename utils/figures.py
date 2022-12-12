@@ -6,16 +6,12 @@ import numpy as np
 
 # графические библиотеки
 import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
 # библиотеки машинного обучения
-from sklearn.metrics import f1_score
-from sklearn.model_selection import StratifiedKFold, cross_validate
-from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 # отображать по умолчанию длину Датафрейма
@@ -30,34 +26,13 @@ if not sys.warnoptions:
 import os
 import time
 
-
-gestures = ['"open"',  # 0
-            '"пистолет"',  # 1
-            'сгиб большого пальца',  # 2
-            '"ok"',  # 3
-            '"grab"',  # 4
-            '"битые" данные',  # -1
-]
+# Загрузка констант из файла конфигурации
+from utils.reader_config import read_config
+config = read_config('../config/data_config.json')
 
 
-# Словарь для последующей агрегации данных. Изначально прописаны названия файлов в архиве
-mounts = {
-    1 : {
-        'path_X_train' : 'X_train_1.npy',
-        'path_y_train' : 'y_train_1.npy',
-        'path_X_test_dataset' : 'X_test_dataset_1.pkl',
-    },
-    2 : {
-        'path_X_train' : 'X_train_2.npy',
-        'path_y_train' : 'y_train_2.npy',
-        'path_X_test_dataset' : 'X_test_dataset_2.pkl',
-    },
-    3 : {
-        'path_X_train' : 'X_train_3.npy',
-        'path_y_train' : 'y_train_3.npy',
-        'path_X_test_dataset' : 'X_test_dataset_3.pkl',
-    }
-}
+# Словарь c названиями файлов в архиве для агрегации данных 
+mounts = config['mounts']
 
 def get_dataframe(data):
     """
@@ -88,7 +63,7 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
       
     for i in range(df.shape[0]):
         # если средняя амплитуда превышает 200, то добавляем индекс в список 'active_sensors' (надежных датчиков). 
-        if df.iloc[i].mean() > 200:
+        if df.iloc[i].mean() > config['level_boundary']:
             active_sensors.append(i)
         
         #Остальные датчики с малой амплитудой - в список ненадёжных.      
@@ -102,7 +77,7 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
     return active_sensors, passive_sensors 
 
 
-def get_signals_plot(data, test_id, plot_counter):
+def get_signals_plot(data, mounts, test_id:list, plot_counter):
     """Функция отображения показаний датчиков наблюдений для каждого пилота
 
     Args:
@@ -111,28 +86,19 @@ def get_signals_plot(data, test_id, plot_counter):
         plot_counter (int): номер рисунка
     """    
     
+    fig, axx = plt.subplots(3, 1, sharex=True, figsize=(10, 5))
+    
     for mount_name, mount in mounts.items():
-        X_test_dataset = data
+        #mount['X_train'] = np.load(path_to_zip)[mount['path_X_train']]
         
-        fig, axx = plt.subplots(3, 1, sharex=True, figsize=(10, 5))
-
-        test_id = 3  # номер наблюдения 
-        plt.sca(axx[0])
-        plt.plot(X_test_dataset[test_id].T, lw=0.5)
-        plt.title(f'Размер наблюдения: {X_test_dataset[test_id][mount_name].T.shape[0]} временных промежутков')
+        for n, id in enumerate(test_id): # n-порядковый номер наблюдения; id - индекс наблюдения
+    
+            plt.sca(axx[n])
+            plt.plot(data[id].T, lw=0.5)
+            plt.title(f'Размер наблюдения: {data[id][mount_name].T.shape[0]} временных промежутков')
         
-        test_id = 1  # номер наблюдения
-        plt.sca(axx[1])
-        plt.plot(X_test_dataset[test_id].T, lw=0.5)
-        plt.title(f'Размер наблюдения: {X_test_dataset[test_id][mount_name].T.shape[0]} временных промежутков')
-        
-        test_id = 8  # номер наблюдения
-        plt.sca(axx[2])
-        plt.plot(X_test_dataset[test_id].T, lw=0.5)
-        plt.title(f'Размер наблюдения: {X_test_dataset[test_id][mount_name].T.shape[0]} временных промежутков')
-        
-        plt.suptitle(f"Рис. {plot_counter} - Сигналы датчиков в наблюдениях  пилота {mount_name}", y=-0.1, fontsize=14)
-        plt.tight_layout()
+        fig.suptitle(f"Рис. {plot_counter} - Сигналы датчиков в наблюдениях  пилота {mount_name}", y=-0.1, fontsize=14)
+        fig.tight_layout()
         
         plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
         #plt.show(); - не вызывать для корретного логгирования
