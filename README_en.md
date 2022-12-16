@@ -87,7 +87,7 @@ Data acquisition was conducted as follows:  there were chosen 3  people (operato
 $^1$Optomyography (OMG) is a method of monitoring muscle activity with optical sensors. OMG infrared light source emits impulses toward the muscle under the skin. If the muscle is neutral, the light will be almost completely reflected; in case it is stretched or compressed - partially diffused. So the amount of diffused light is measured by a light detector(Fig.1-2).
 
 <p align="center"> 
-<img src="/logs_and_figures/fig_0-2_ru.png" width="500" height="200"> <br>Fig.1-1 - Muscle tension detection using the optomyography method.</p>
+<img src="/logs_and_figures/fig_0-2_en.png" width="500" height="200"> <br>Fig.1-1 - Muscle tension detection using the optomyography method.</p>
 
 The experiment details were as follows: since every operator takes some time between observing a gesture and performing a gesture, it can be seen a gap between the two line graphs below. On the second, each gesture was started or ended with the "open palm" gesture. On the third, from the whole set of gestures only distinctive ones were: either with clenching or unclenching fingers to simplify recognition. As result, experimental data was split into 2 parts, and the sequence of original gestures was saved into arrays X_train, X_test, and y_train respectively. An example of the acquired data is represented in the figure below.
 
