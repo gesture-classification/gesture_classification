@@ -104,7 +104,7 @@ Type in the console:
 git clone https://github.com/gesture-classification/gesture_classification
 pip install -r -q requirements.txt
  
-# 2. Make sure the experimental data *X_train* and *X_test* files are in the *data* folder. 
+# 2. Make sure the experimental data X_train and X_test files are in the data folder. 
 # 3. Create the model.
 
 python main.py
@@ -115,7 +115,7 @@ python main.py
   <summary> Display how to get an inference </summary>
 <br>
 
-Under **inference** implies gesture prediction using a fully trained machine learning model from user data. The inference is performed using a class *MakeInference*, which takes the path to test data (path_to_X_test_dataset) as an argument and saves the prediction into the file "predictions.csv" in the project root directory. The methods of the class are as follows:
+The term **inference** means gesture prediction using a fully trained machine learning model from user data. The inference is performed using a class *MakeInference*, which takes the path to test data (*path_to_X_test_dataset*) as an argument and saves the prediction into the file "predictions.csv" in the project root directory. The methods of the class are as follows:
 - loading of variables from *data_config.json*; 
 - loading of train and test data using *DataReader*; 
 - loading of a pre-trained model from the *models* folder;
