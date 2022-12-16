@@ -56,7 +56,7 @@ def get_sensor_list(Pilot_id:int, mounts:dict, print_active=False):
     
     ---Аргументы функции:-----
     Pilot_id - номер пилота,
-    mounts - словарь с данными.
+    mounts - словарь с данными,
     print_active - печать активных жестов. 
     """
     
@@ -87,6 +87,7 @@ def get_signals_plot(data, mounts:dict, test_id:list, plot_counter:int):
 
     Args:
         data (dict): _description_
+        mounts - словарь с данными,
         test_id (list): номер наблюдения
         plot_counter (int): номер рисунка
     """    
@@ -110,7 +111,7 @@ def get_signals_plot(data, mounts:dict, test_id:list, plot_counter:int):
         break
 
 
-def get_all_sensors_plot(Pilot_id, timesteps:list, mounts, plot_counter=1):
+def get_all_sensors_plot(Pilot_id, timesteps:list, mounts:dict, plot_counter=1):
     """
     Функция построения диаграммы показаний датчиков заданного временного периода. Аргументы функции:
     Pilot_id - номер пилота;
