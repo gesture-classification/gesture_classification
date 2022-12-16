@@ -142,9 +142,8 @@ def get_all_sensors_plot(Pilot_id, timesteps:list, mounts:dict, plot_counter=1):
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
 
 
-def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_counter=1):
-    """
-    Функция построения графика показаний активных и пассивных датчиков. Аргументы функции:
+def get_active_passive_sensors_plot(Pilot_id:int, timesteps:list, mounts:dict, plot_counter=1):
+    """    Функция построения графика показаний активных и пассивных датчиков. Аргументы функции:
     Pilot_id - номер пилота;
     timesteps - лист из двух временных периодов;
     mounts - словарь с данными;
@@ -184,10 +183,12 @@ def get_active_passive_sensors_plot(Pilot_id, timesteps:list, mounts, plot_count
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
     
 
-def plot_history(history, plot_counter):
+def plot_history(history, plot_counter:int):
     
-    """
-    Функция визуализации процесса обучения модели       
+    """Функция визуализации процесса обучения модели.
+    Аргументы:
+    history - история обучения модели,
+    plot_counter - порядковый номер рисунка.      
     """
     f1_sc = history.history['f1']  
     loss = history.history['loss']
@@ -216,7 +217,7 @@ def plot_history(history, plot_counter):
     #fig.show(); #- не вызывать для корретного логгирования
 
 
-def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_counter):
+def get_gesture_prediction_plot(Pilot_id:int, i:int, y_pred_train_nn_mean, mounts:dict, plot_counter:int):
     
     """Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста, вероятности появления жеста и предсказание класса жеста.
     
@@ -267,7 +268,7 @@ def get_gesture_prediction_plot(Pilot_id, i, y_pred_train_nn_mean, mounts, plot_
     plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
 
 
-def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts, plot_counter=1):
+def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts:dict, plot_counter:int=1):
     """ Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста. 
     
     -----Агументы:-------------
@@ -320,7 +321,7 @@ def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts, p
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
 
 
-def get_signal_derivative_and_normalized_plot(Pilot_id, timesteps:list, sensors:list, mounts, plot_counter=1):
+def get_signal_derivative_and_normalized_plot(Pilot_id:int, timesteps:list, sensors:list, mounts:dict, plot_counter:int=1):
 
     """Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста, вероятности появления жеста и предсказание.
     
@@ -388,7 +389,7 @@ def get_signal_derivative_and_normalized_plot(Pilot_id, timesteps:list, sensors:
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
     
     
-def get_display_data(mounts, plot_counter):
+def get_display_data(mounts:dict, plot_counter:int):
     """Функция отображения тренировочных данных (X_train, y_train)) для всех пилотов в датасете
     ------Агументы:---------
     mounts (dict) - словарь, содержащий словари с данными: X_train, y_train, x_test
