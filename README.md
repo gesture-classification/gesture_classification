@@ -23,7 +23,7 @@ To provide better functional wrist prostheses the company [Motorica](https://mot
 
 During the competition it was designed a predictive mathematical model, conducting the following tasks:
 * gesture change period identification.
-* gesture classification by muscle signals from optomyographical$^1$ sensors.
+* gesture classification by muscle signals from optomyographical $^1$ sensors.
 
 
 <p align="center"> 
@@ -82,9 +82,9 @@ gesture_classification
 
 
 ## Data and methods
-Data acquisition was conducted as follows:  there were chosen 3  people (operators) with healthy hands and on which were attached 50 optomyographical$^1$ sensors. Then each operator was bending and unclenching his/her fingers, performing a given sequence of gestures.
+Data acquisition was conducted as follows:  there were chosen 3  people (operators) with healthy hands and on which were attached 50 optomyographical $^1$ sensors. Then each operator was bending and unclenching his/her fingers, performing a given sequence of gestures.
 
-$^1$Optomyography (OMG) is a method of monitoring muscle activity with optical sensors. OMG infrared light source emits impulses toward the muscle under the skin. If the muscle is neutral, the light will be almost completely reflected; in case it is stretched or compressed - partially diffused. So the amount of diffused light is measured by a light detector(Fig.1-2).
+$^1$ Optomyography (OMG) is a method of monitoring muscle activity with optical sensors. OMG infrared light source emits impulses toward the muscle under the skin. If the muscle is neutral, the light will be almost completely reflected; in case it is stretched or compressed - partially diffused. So the amount of diffused light is measured by a light detector(Fig.1-2).
 
 <p align="center"> 
 <img src="/logs_and_figures/fig_0-2_en.png" width="500" height="200"> <br>Fig.1-1 - Muscle tension detection using the optomyography method.</p>
