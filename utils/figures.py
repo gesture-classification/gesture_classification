@@ -34,9 +34,12 @@ config = read_config('../config/data_config.json')
 # Словарь c названиями файлов в архиве для агрегации данных 
 mounts = config['mounts']
 
-def get_dataframe(Pilot_id, mounts, data='X_train'):
-    """
-    Функция создания датафрейма из данных словаря
+def get_dataframe(Pilot_id:int, mounts:dict, data:np.array='X_train')-> pd.DataFrame: 
+    """ Функция создания датафрейма из данных словаря
+    
+    Returns:
+    numpy: np.array
+     
     """
     data = mounts[Pilot_id][data]
     
@@ -48,12 +51,13 @@ def get_dataframe(Pilot_id, mounts, data='X_train'):
     
     return df
 
-def get_sensor_list(Pilot_id, mounts, print_active=False):
+def get_sensor_list(Pilot_id:int, mounts:dict, print_active=False):
     """ Функция печати и импорта в память всех номеров датчиков.
     
     ---Аргументы функции:-----
     Pilot_id - номер пилота,
-    mounts - словарь с данными. 
+    mounts - словарь с данными.
+    print_active - печать активных жестов. 
     """
     
     df = get_dataframe(Pilot_id, mounts=mounts).T
@@ -78,7 +82,7 @@ def get_sensor_list(Pilot_id, mounts, print_active=False):
     return active_sensors, passive_sensors 
 
 
-def get_signals_plot(data, mounts, test_id:list, plot_counter):
+def get_signals_plot(data, mounts:dict, test_id:list, plot_counter:int):
     """Функция отображения показаний датчиков наблюдений для каждого пилота
 
     Args:
@@ -90,8 +94,7 @@ def get_signals_plot(data, mounts, test_id:list, plot_counter):
     fig, axx = plt.subplots(3, 1, sharex=True, figsize=(10, 5))
     
     for mount_name, mount in mounts.items():
-        #mount['X_train'] = np.load(path_to_zip)[mount['path_X_train']]
-        
+                
         for n, id in enumerate(test_id): # n-порядковый номер наблюдения; id - индекс наблюдения
     
             plt.sca(axx[n])

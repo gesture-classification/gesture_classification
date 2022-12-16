@@ -1,53 +1,56 @@
-# Motorica Advanced Gesture Classification
+# Advanced Gesture Classification
 
-## Оглавление
+## Contents
 
-* [Введение](README.md#Введение)
-* [Структура проекта](README.md#Структура-проекта)
-* [Экспериментальные данные и методы](README.md#Экспериментальные-данные-и-методы)
-* [Установка](README.md#Установка)
-* [Инференс](README.md#Инференс)
-* [Подготовка и анализ данных](README.md#Подготовка-и-анализ-данных)
-* [Структура моделей машинного обучения](README.md#Структура-моделей-машинного-обучения)
-* [Лог эксперимента](README.md#лог-эксперимента)
-* [Выводы](README.md#выводы)
+* [Introdcution](README.md#Contents)
+* [Project structure](README.md#Project-structure)
+* [Data and methods](README.md#Data-and-methods)
+* [Installation](README.md#Installation)
+* [Inference](README.md#Inference)
+* [Experimental data analysis](README.md#Experimental-data-analysis)
+* [Machine learning models structure](README.md#Machine-learning-models-structure)
+* [Experiment logging](README.md#Experiment-logging)
+* [Conclusion](README.md#Conclusion)
 
 
-## Введение
+## Introdcution
 
-Вследствие потери органа или части тела функции человека существенно ограничиваются. Благодяря прогрессу в области биомедицины и изобретению таких протезов, как: аппарат ИВЛ, сердечный клапан и бионические протезы конечностей, и т. д., утраченные функции организма могут быть частично восстановлены. Соотношение замещеннных функциий к исходным зависит от многих факторов: сложности утраченного органа, исходного количества его функций и их вариабельности. Так, например, в виду многообразия жестов кисти, высокой её точности и скорости протезирование кистей рук является сложной задачей. Ввиду значительного влияния на качество жизни необходимость бионических протезов кисти очень высока.
+When a human loses an organ or limb loss, his functions decrease dramatically. Luckily technological progress in biomedicine provided us with prostheses like artificial kidneys, mechanical ventilation, artificial heart valves, bionic hand, etc., so lost body functions could be partially recovered. The compensated-to-original functions ratio depends on multiple factors such as the complexity of the lost organ, the number of original functions and their variability, and so on. Due to the large number of finger gestures, hand prosthetics is considered a very complex assignment. 
 
-По [данным](https://rosstat.gov.ru/storage/mediabank/ST90u1EJ/2-30.doc) РосСтата на 2020г количество больных, нуждающихся в протезировании кисти, составляется около 1.5% (примерно 2600 человек) от всех нуждающихся в протезировании. Для улучшения функционала бионических кистевых протезов компанией ["Моторика"](https://motorica.org/) была предложена [задача](https://www.kaggle.com/competitions/motorica-advanced-gesture-classification) «распознавания жестов» на основании данных оптомиографических датчиков.
+In 2020 in Russia there were about 20,000 people with upper limbs amputations, half of them missing forearm or wrist([Grinin V. M., Shestemirova E. I.](http://dx.doi.org/10.32687/0869-866X-2020-28-3-380-384). Notably, only some 500 people were able to get operated prostheses from the national prosthetics program [Rosstat](https://rosstat.gov.ru/storage/mediabank/ST90u1EJ/2-30.doc). Thus, due to the lack of prostheses supply and because of its direct impact on human life quality functional hands prosthetics is also of high importance.
 
-В ходе соревнования на Kaggle нами была создана математическая модель, предсказывающая жест человека по сокращению мышц кисти. Задача исследования заключалась в следующем:
-* классификация жеста по показаниям датчиков оптомиографии установленных на кисти;
-* определение момента начала жеста.
+To provide better functional wrist prostheses the company [Motorica](https://motorica.org/) designed [a Kaggle competition](https://www.kaggle.com/competitions/motorica-advanced-gesture-classification) with the task of predicting wrist gestures from muscle contractions.
+
+During the competition it was designed a predictive mathematical model, conducting the following tasks:
+* gesture change period identification.
+* gesture classification by muscle signals from optomyographical$^1$ sensors.
+
 
 <p align="center"> 
-<img src="/logs_and_figures/fig_0-1.PNG" width="450" height="350"> <br>сайт: https://motorica.org/ 
+<img src="/logs_and_figures/fig_0-1.PNG" width="450" height="350"> <br>image from https://motorica.org/ 
 </p>
 
 
-## Структура проекта
+## Project structure
 
 <details>
-  <summary> Посмотреть структуру папок и файлов </summary>
+  <summary>display project structure </summary>
 
 ```Python
 gesture_classification
 ├── .git
 ├── .gitignore
-├── data             # содержит архив с исходными данными
+├── data             # data archive
 │   └── motorica-advanced-gesture-classification.zip
 ├── dockerfile
-├── logs_and_figures # содержит графики, логи работы модели, сабмиты
+├── logs_and_figures # charts, logs, and submits
 │   ├── fig_0-1.PNG
 ...
 │   ├── fig_2-5.png
 │   ├── y_test_submit_rnn_LSTM(0.69641).csv
 │   └── y_test_submit_rnn_LSTM.csv
 ├── main.py
-├── models           # модели проекта и их коэффициенты 
+├── models           # models and weights 
 │   ├── best_model_rnn_1.hdf5
 │   ├── best_model_rnn_2.hdf5
 │   ├── best_model_rnn_3.hdf5
@@ -59,14 +62,14 @@ gesture_classification
 │   ├── srnn.py
 │   ├── temp_best_model
 │   └── weights
-├── notebooks        # ноутбуки проекта
+├── notebooks        # notebooks
 │   ├── .cometml-runs
 │   ├── 1_EDA_sprint_3.ipynb
 │   ├── 2_model_SRNN_LSTM.ipynb
 │   └── 3_boxplots_clear_gests_sens_gest.ipynb
 ├── README.md
 ├── requirements.txt 
-└── utils            # основные и вспомогательные функции, константы, загрузчик данных
+└── utils            # functions, variables, and data loaders
     ├── credentials.json
     ├── data_reader.py
     ├── figures.py
@@ -78,61 +81,59 @@ gesture_classification
 </details>
 
 
-## Экспериментальные данные и методы
-Сбор данных был организован следующим образом: случайным образом было выбрано 3 человека-оператора со здоровыми руками, чтобы обеспечить достоверность показаний. Затем к коже их рук были прикреплены датчики, считывающие сокращение мышц методом оптомиографии. 
+## Data and methods
+Data acquisition was conducted as follows:  there were chosen 3  people (operators) with healthy hands and on which were attached 50 optomyographical$^1$ sensors. Then each operator was bending and unclenching his/her fingers, performing a given sequence of gestures.
 
-Оптомиография (ОМГ) - метод мониторинга мышечной активности с помощью оптических сигналов. ОМГ датичик периодически испускает импульсы в инфракрасном диапазоне на участок кожи. В случае если подкожная мышца расслаблена, то луч от датчика будет отражаться от поверхности кожи на приёмник-фототранзистор; в случае расслабления - в значительно поглащаться мышцей (Рис.1-2). Степень поглащения является показателем уровня напряжения мышцы.
+$^1$Optomyography (OMG) is a method of monitoring muscle activity with optical sensors. OMG infrared light source emits impulses toward the muscle under the skin. If the muscle is neutral, the light will be almost completely reflected; in case it is stretched or compressed - partially diffused. So the amount of diffused light is measured by a light detector(Fig.1-2).
 
 <p align="center"> 
-<img src="/logs_and_figures/fig_0-2_ru.png" width="500" height="200"> <br>Рис.1-1 - Схема детектирования состояния мышцы оптомиогарфическими датчиком</p>
+<img src="/logs_and_figures/fig_0-2_en.png" width="500" height="200"> <br>Fig.1-1 - Muscle tension detection using the optomyography method.</p>
 
+The experiment details were as follows: since every operator takes some time between observing a gesture and performing a gesture, it can be seen a gap between the two line graphs below. On the second, each gesture was started or ended with the "open palm" gesture. On the third, from the whole set of gestures only distinctive ones were: either with clenching or unclenching fingers to simplify recognition. As result, experimental data was split into 2 parts, and the sequence of original gestures was saved into arrays X_train, X_test, and y_train respectively. An example of the acquired data is represented in the figure below.
 
-Оператор циклически выполнял одинаковую последовательность жестов, которую ему демонстрировали. Поскольку оператор тратил некоторое время на принятие решения о выполнении показанного жеста, то его жесты выполнялись с некоторой задержкой относительно показанных. Важно, что по условиям эксперимента исходное либо конечное состояние кисти - жест "открытая ладонь". Кроме того, из многообразия жестов были выбраны только характерные положения сгиба и разгиба пальцев для упрощения распознавания. Сигналы манипулятора были записаны файлы y_train, а сигналы с датчиков оптомиографии были записаны в файлы X_train и X_test. 
- 
+![Experimental dara](/logs_and_figures/fig_2-1.png)
+<p align="center">Fig.1-2 - Experimental data of pilot #3.</p>
 
-![Экспериментальные данные](/logs_and_figures/fig_2-1.png)
-<p align="center">Рис.1-2 - Экспериментальные данные.</p>
+:arrow_up:[ to contents](README.md#Contents)
 
-:arrow_up:[Оглавление](README.md#оглавление)
-
-## Установка
-1. Скопируйте репозиторий, введя в терминале следующие команды:
+## Installation
+Type in the console:
 ```Python
-# Clone repository and install requirements
+# 1. Clone repository and install requirements.
 
 git clone https://github.com/gesture-classification/gesture_classification
 pip install -r -q requirements.txt
-``` 
-2. Переместите архив с данными для обучения (X_train) и валидации (X_test)  в папку *data*. 
-3. Выполните в терминале команду ```python main.py```
+ 
+# 2. Make sure the experimental data *X_train* and *X_test* files are in the *data* folder. 
+# 3. Create the model.
 
-## Инференс
+python main.py
+```
+
+## Inference
 <details>
-  <summary> Посмотреть метод получения инференса </summary>
+  <summary> Display how to get an inference </summary>
 <br>
 
-Под **инференсом** в данном проекте понимается получение предсказания жеста(класса) с помощью предварительно обученной модели на показаниях 50  ОМГ датчиков. 
-
-Иинференс создаётся с помощью класса *MakeInference*, который на вход принимает путь до тестовых данных (path_to_X_test_dataset) и сохраняет результат предсказания в файл "predictions.csv" в корневой папке проекта. Внутри класса выполняются следующие методы:
-- загрузка переменных из файла *data_config.json*; 
-- загрузка тестовых данных помощью класса *DataReader*; 
-- загрузка предварительно обученной модели из папки *models*;
-- получение инференса на тестовых данных;
-- сохранение полученного предсказания в файл *predictions.csv*.
+Under **inference** implies gesture prediction using a fully trained machine learning model from user data. The inference is performed using a class *MakeInference*, which takes the path to test data (path_to_X_test_dataset) as an argument and saves the prediction into the file "predictions.csv" in the project root directory. The methods of the class are as follows:
+- loading of variables from *data_config.json*; 
+- loading of train and test data using *DataReader*; 
+- loading of a pre-trained model from the *models* folder;
+- learning on the given data;
+- saving the output file *predictions.csv*.
 
 
+### Get an inference from
 
-### Получение инференса
-
-1. загрузите исходные данные в папку *data*  в формате `*.npy`. Каждый временной ряд должен иметь 50 признаков-показаний датчиков ОМГ одинаково произвольной длительности.
-2. в файле *data_config.json* укажите пути к файлам в соответствующих переменных:
-   * `path_to_x_trn` - обучающие данные *X_train*
-   * `path_to_y_trn` - тестовые данные *X_test*
-   * `path_to_x_tst` - целевая переменная *y_train*
-   * `path_to_models_weights` - модель
+1. Put your initial data in format `*.npy` into the *data* folder. Each time series of user data must contain 50 features from OMG sensors with any time duration.
+2. Assign paths to the following files to variables in the config *data_config.json*, namely:
+   * `path_to_x_trn` - train data *X_train*
+   * `path_to_y_trn` - test data *X_test*
+   * `path_to_x_tst` - target variable *y_train*
+   * `path_to_models_weights` - model
    
 
-Пример:
+Example:
 ```Python
 {
   "path_to_x_trn" : "data/X_train_2.npy",
@@ -143,71 +144,65 @@ pip install -r -q requirements.txt
 ```
 </details>
 
-## Подготовка и анализ данных
+## Experimental data analysis
 
-Тренировочные и тестовые данные каждого пилота загружаются из архива. Они преобразуются с помощью библиотеки [*mne*](https://mne.tools/stable/index.html).
+Original experimental data of all pilots was loaded from the archive and processed using the [*mne*](https://mne.tools/stable/index.html) library as follows:
+* writing an array of raw dataset for each pilot
+* deleting some cropped and unreadable data of class "-1".
 
-По результатам анализа сделаны следующие выводы:
-* удаление "нечитаемых" участков (класс жеста "-1") позволяет легко избавиться от "битых" данных
-* можно выделить характерные уровни сигнала датчиков при каждом жесте ( см. файл [*3_boxplots_clear_gests_sens_gest.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/3_boxplots_clear_gests_sens_gest.ipynb)
-* датчики можно разделить по величине на активные и пассивные (см. Рис.1-3);
+In result of the EDA ([see notebook 1_EDA_sprint_3.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/1_EDA_sprint_3.ipynb)), it was inferred:
+* each gesture can be identified by distinctive signal levels (see [*3_boxplots_clear_gests_sens_gest.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/3_boxplots_clear_gests_sens_gest.ipynb)
+* sensors can be categorized by the level of the signal into active and passive (see Fig.1-3);
 
-![Активные и пассивны датчики](/logs_and_figures/fig_1-3.png)
+![Active and passive sensors](/logs_and_figures/fig_1-3.png)
 
-* нормализация сигналов датчиков и взятии производной от функции не позволил однозначно определить временной интервал начала жеста (см. Рис. 1-5).  
+* signals processing methods namely normalization and derivative were useless for the identification of gesture change as can be seen in Fig.1-5).  
   
-![нормализация сигналов](/logs_and_figures/fig_1-5.png)
+![Signals normalization](/logs_and_figures/fig_1-5.png)
+
+A comparative analysis of the models, trained with EDA and without showed that chosen signal processing methods worsened prediction. Thus, it was chosen to avoid signal processing and use raw data for model training . 
+
+:arrow_up:[ to contents](README.md#Contents)
 
 
-Сравнительный анализ предсказаний моделей до и после предобработки показал, что все методы, кроме первого, ухудшают качество предсказания. Поэтому было решено отказаться от второго этапа и обучать модель на "сырых" данных. ([*см. ноутбук 1_EDA_sprint_3.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/1_EDA_sprint_3.ipynb)). 
+## Machine learning models structure
 
-:arrow_up:[Оглавление](README.md#оглавление)
-
-
-## Структура моделей машинного обучения
-
-Наборы тренировочных и тестовых данных каждого пилота поступают на параллельное обучение двух моделей(Рис.2-1), имеющих одинаковую структуру и набор параметров: 
-- SimpleRNN, задача которой предсказать фактический момент изменения жеста (появление "ступеньки");
-- LSTM, которая предсказывает класс жеста с учётом времени начала жеста, определённого первой моделью. 
+Every set of train and test data learns 2 models, having a similar structure as shown in Fig.2-1 and parameters as follows:
+- SimpleRNN, used for labeling the data by predicting the period of gesture change (it is expressed as a "step" on the graph);
+- LSTM, which is learning from OMG signals and the labeling data. 
   
-![структура моделей](/logs_and_figures/fig_2-2.png)
-<p align="center">  Рис.2-1 - Структура моделей машинного обучения. </p>
+![Model structure](/logs_and_figures/fig_2-2.png)
+<p align="center">  Fig.2-1 - Machine learning model structure. </p>
 
-**Модель SimpleRNN** из библиотеки [*Keras*](https://keras.io/) имеет простую структуру из одного слоя. Чтобы компенсировать ошибки предсказания, обучение модели для каждого "пилота" проводится несколько раз с разными параметрами validation_split и затем результаты предсказания каждой модели усредняются по каждому пилоту. Ошибка предсказания определяется по среднеквадратическому отклонению. Ход обучения модели показан на Рис.2-2.
-
-
-![график обучения первой модели](/logs_and_figures/fig_2-3.png)
-<p align="center">  Рис.2-2 - график обучения модели SimpleRNN. </p>
+**SimpleRNN model** (from the [*Keras*](https://keras.io/) library) has a simple structure and contains 1 layer. To compensate the prediction error, the data was split several times into parts with different ratios (validation_split) and every model predicts pilots' gests. As a result, the mean of all predictions was taken. The prediction quality is estimated using the mean squared error metrics. The learning progress can be observed in Fig.2-2.
 
 
-Как видно из Рис. 2-2, качество предсказания данных валидационной выборки практически не изменяется. С другой стороны, модель успешно предсказывает временной промежуток начала жеста.
+![Learning progress of the model SimpleRNN](/logs_and_figures/fig_2-3.png)
+<p align="center">  Fig.2-2 - SimpleRNN model learning progress. </p>
 
 
+As can be seen from Fig.2-2, the predictive quality does not change much. On the other hand, the model predicts the gesture change period successfully.
 
-**Модель LSTM** состоит из нескольких слоев LSTM с дополнительным Dense-слоем. Структура слоёв модели подбиралась эмпирически по оценке f1-score. Обучение модели производится на оригинальных данных X_train и корректированных данных y_train_ch. Затем обученная модель LSTM используется для предсказания тестовых данных. График обучения модели представлен на рис. 2-3
+**LSTM model** consists of several LSTM-layers with an additional dense layer. The layer structure was empirically defined from the best f1-score. Model training was carried on the dataset *X_train* and labeled data *y_train_ch*. Then trained LSTM model was used to predict the test data. The learning progress can be observed in Fig.2-3.
 
-![график обучения второй модели](/logs_and_figures/fig_2-5.png)
+![LSTM model learning progress](/logs_and_figures/fig_2-5.png)
 
-<p align="center">  Рис.2-3 - график обучения модели LSTM. </p>
+<p align="center">  Fig.2-3 - LSTM model learning progress. </p>
 
-По наклону кривой обучения на рис.2-3 видно, что модель переобучается. Неоптимально выбранные параметры обучения повышают время обучения и снижают точность предсказании тестовых данных. Однако, полученный результат f1-score составляет 0.69632.
+The u-shape pattern of the learning curve in Fig.2-3 points on the model overfitting. Non-optimally chosen parameters are leading to an increase in the learning time and growth of prediction errors. Meanwhile, it reached fair model quality predicting correctly some of 2/3 of datapoints  (f1-score is 0.69632). The result can be observed in the graph provided below.
 
-Результат предсказания жеста представлен на рис. 2-4.
+![Gesture prediction](/logs_and_figures/fig_2-6.png)
 
-![Предсказание жеста](/logs_and_figures/fig_2-6.png)
+<p align="center">  Fig.2-4 - Original signals and gesture classification </p>
 
-<p align="center">  Рис.2-4 - Исходные сигналы и предсказание жеста </p>
+:arrow_up:[ to contents](README.md#Contents)
 
-:arrow_up:[Оглавление](README.md#оглавление)
+## Experiment logging
 
-## Лог эксперимента
-
-Логгирование параметров и хода обучения модели, а также графиков выполнено с момощью библитокеи Comet_ml. Результаты эсперимента доступны [на сайте Comet_ml](https://www.comet.com/alex1iv/gesture-classification/view/new/panels).
-
-
-## Выводы
-В результате исследования разработана программа предобработки данных и создания модели предсказания жестов по мускульному сигналу предплечья человека. Данную модель возможно использовать для создания автоматизированных протезов кисти.
-
-:arrow_up:[Оглавление](README.md#оглавление)
+The learning progress as well as other model parameters, figures, and variables were logged using the Comet_ml library. These outcomes can be observed on the [Comet_ml page](https://www.comet.com/alex1iv/gesture-classification/view/new/panels).
 
 
+## Conclusion
+As a result of the study, it was created the data processing algorithm and the machine learning model, which is predicting wrist gestures by muscle signals. The model can be used to create better hand prostheses.
+
+:arrow_up:[ to contents](README.md#Contents)
