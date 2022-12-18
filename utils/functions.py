@@ -1,23 +1,47 @@
 # Импортируем библиотеки
+import os, sys, json, random
+from dotmap import DotMap
+import numpy as np 
 
-from utils.reader_config import read_config
-
+import tensorflow as tf
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 
 # библиотека взаимодействия с интерпретатором
-import sys
 if not sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
 
-import os
+def config_reader(path_to_json_conf:str)->dict:
+    """Функция загрузки параметров конфигурации в память.
 
-config = read_config('../config/data_config.json')
+    Args:
+    ------------
+    path_to_json_conf (_str_): путь к файлу конфигурации
 
-# Функция для расчета метрики f1_score, Precision, Recall
+    Returns:
+    ------------
+    config (dict): словарь с параметрами кинфигурации
+    """    
+    with open(path_to_json_conf, 'r') as config_file:
+        config_dict = json.load(config_file)
+    
+    config = DotMap(config_dict)
+    
+    return config
+
+config = config_reader('../config/data_config.json')
+
 def f1(y_true, y_pred):
-        
+    """Функция для расчета метрики f1_score, Precision, Recall
+
+    Args:
+        y_true (_type_): _description_
+        y_pred (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """        
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
 
     def recall(y_true, y_pred):
@@ -50,13 +74,26 @@ def f1(y_true, y_pred):
 
  # Функция Callbacks, используемая при обучении модели, включающая
  # checkpoint - сохранение лучшей модели
+
 def callbacks(
-    lr,
-    num_train, 
+    num_train,
+    lr=config['lr'],
     reduce_patience=config['reduce_patience'], 
     stop_patience=config["stop_patience"], 
-    PATH_BEST_MODEL=config["PATH_BEST_MODEL"]
-):  
+    PATH_BEST_MODEL=config["PATH_BEST_MODEL"]   
+    ):
+    """Описание функции
+
+    Args:
+        lr (_type_): _description_
+        num_train (_type_): _description_
+        reduce_patience (_type_, optional): _description_. Defaults to config['reduce_patience'].
+        stop_patience (_type_, optional): _description_. Defaults to config["stop_patience"].
+        PATH_BEST_MODEL (_type_, optional): _description_. Defaults to config["PATH_BEST_MODEL"].
+
+    Returns:
+        _type_: _description_
+    """      
           
     checkpoint = ModelCheckpoint(
         os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
@@ -83,3 +120,12 @@ def callbacks(
     )
     
     return [checkpoint, earlystop, reduce_lr]
+
+
+def reset_random_seeds(seed_value=config['seed_value']):
+    """Функция задания seed
+    """
+    os.environ['PYTHONHASHSEED'] = str(seed_value)
+    tf.random.set_seed(seed_value)
+    np.random.seed(seed_value)
+    random.seed(seed_value)

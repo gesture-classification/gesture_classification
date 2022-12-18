@@ -28,6 +28,8 @@
     "grab",  
     "bad data"  
   ],
+
+  "seed_value" : 0,
   
 
   "//": "Словарь mounts, в котором хранятся исходные данные 3х пилотов",
@@ -53,6 +55,7 @@
   "level_boundary":200,
 
   "//": "Callbacks",
+  "lr":0.001,
   "reduce_patience":15,
   "stop_patience":200,
   "PATH_BEST_MODEL": "/gesture_classification/models/",

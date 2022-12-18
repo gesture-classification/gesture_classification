@@ -27,8 +27,8 @@ import os
 import time
 
 # Загрузка констант из файла конфигурации
-from utils.reader_config import read_config
-config = read_config('../config/data_config.json')
+from utils.functions import config_reader
+config = config_reader('../config/data_config.json')
 
 
 # Словарь c названиями файлов в архиве для агрегации данных 
@@ -106,7 +106,7 @@ def get_signals_plot(data, mounts:dict, test_id:list, plot_counter:int):
         fig.tight_layout()
         
         plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
-        #plt.show(); - не вызывать для корретного логгирования
+        #plt.show(); #- не вызывать для корретного логгирования
 
         break
 
@@ -424,7 +424,7 @@ def get_display_data(mounts:dict, plot_counter:int):
         
         plt.tight_layout()
     
-    # plt.show() - не вызывать для корретного логгирования
+    #plt.show() #- не вызывать для корретного логгирования
     fig.suptitle(f"Рис. {plot_counter} - Сигналы датчиков и классы жестов", y=-0.1, fontsize=12);    
     
     plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
