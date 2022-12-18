@@ -32,19 +32,19 @@
   "//": "Словарь mounts, в котором хранятся исходные данные 3х пилотов",
   "mounts" : {
     "1" : {
-        "path_X_train" : "X_train_1.npy",
-        "path_y_train" : "y_train_1.npy",
-        "path_X_test_dataset" : "X_test_dataset_1.pkl"
+      "path_X_train" : "X_train_1.npy",
+      "path_y_train" : "y_train_1.npy",
+      "path_X_test_dataset" : "X_test_dataset_1.pkl"
     },
     "2" : {
-        "path_X_train" : "X_train_2.npy",
-        "path_y_train" : "y_train_2.npy",
-        "path_X_test_dataset" : "X_test_dataset_2.pkl"
+      "path_X_train" : "X_train_2.npy",
+      "path_y_train" : "y_train_2.npy",
+      "path_X_test_dataset" : "X_test_dataset_2.pkl"
     },
     "3" : {
-        "path_X_train" : "X_train_3.npy",
-        "path_y_train" : "y_train_3.npy",
-        "path_X_test_dataset" : "X_test_dataset_3.pkl"
+      "path_X_train" : "X_train_3.npy",
+      "path_y_train" : "y_train_3.npy",
+      "path_X_test_dataset" : "X_test_dataset_3.pkl"
     }
   },
 
