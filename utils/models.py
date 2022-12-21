@@ -11,6 +11,14 @@ from utils.functions import config_reader
 config = config_reader() #'../config/data_config.json'
 
 class simpleRNN():
+    """Класс создаёт модель simpleRNN.
+    Параметры:
+    ----------
+    n_timesteps (_int_) - кол-во временных периодов
+    n_channels (_int_) - кол-во датчиков
+    output_units - 
+    units - размерность модели   
+    """    
     def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
         self.n_timesteps = None #X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
@@ -21,6 +29,8 @@ class simpleRNN():
 
 
     def build_model(self):
+        """Метод формирования модели
+        """
         input_channels = x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
 
         x = tf.keras.layers.BatchNormalization()(x)
@@ -41,16 +51,25 @@ class simpleRNN():
     
 
 class LSTM():
+    """Класс создаёт модель LSTM.
+    Параметры:
+    ----------
+    n_timesteps (_int_) - кол-во временных периодов
+    n_channels (_int_) - кол-во датчиков
+    output_units - 
+    lstm_units - размерность модели
+    """
     def __init__(self, X_train_nn, x_trn_pred_dict):
         self.n_timesteps = X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
-        self.output_units = np.mean(x_trn_pred_dict[3], axis=0).shape[-1]
+        self.output_units = np.mean(x_trn_pred_dict[3], axis=0).shape[-1]  # среднее предсказание от 3-х моделей SRNN
         self.lstm_units = config['lstm_units']
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
 
 
     def build_model_LSTM(self):
-        
+        """Метод формирования модели
+        """
         input_channels = x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
 
         x = tf.keras.layers.BatchNormalization()(x)
