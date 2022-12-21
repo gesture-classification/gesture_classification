@@ -78,6 +78,13 @@
     "patience": "reduce_patience", 
     "verbose":1,
     "min_lr_coeff":10000
-  }
+  },
+
+  "//": "Модель SimpleRNN",
+  "simpleRNN_units" : 100,
+
+  "//": "Модель LSTM",
+  "lstm_units" : 100
+
 }
 
