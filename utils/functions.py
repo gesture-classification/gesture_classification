@@ -30,7 +30,7 @@ def config_reader(path_to_json_conf:str)->dict:
     
     return config
 
-config = config_reader('../config/data_config.json')
+config = config_reader('config/data_config.json')
 
 def f1(y_true, y_pred):
     """Функция для расчета метрики f1_score, Precision, Recall

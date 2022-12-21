@@ -1,23 +1,20 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import csv
 import numpy as np
 from tensorflow import keras
 from utils.functions import f1
-from utils.data_reader import DataReader
-from utils.reader_config import read_config
+from utils.functions import config_reader
 
 
 class MakeInference():
 
-    def __init__(self, path_to_X_test_dataset, 
-                 path_to_config='config\data_config.json'):
+    def __init__(self, 
+                 path_to_config='config/data_config.json'
+                ):
         super(MakeInference, self).__init__()
-        self.config = read_config(path_to_config)
-        self.X_test_dataset = DataReader(path_to_X_test_dataset).data
+        self.config = config_reader(path_to_config)
         self.path_to_models_weights = self.config['path_to_models_weights']
-        self.create_prediction(self.X_test_dataset,
-                               self.path_to_models_weights)
 
     def create_prediction(self, X_test_dataset, path_to_models_weights):
 
