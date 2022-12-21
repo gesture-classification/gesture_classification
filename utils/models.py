@@ -26,6 +26,7 @@ class simpleRNN():
         self.units = units 
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
         
+        
 
 
     def build_model(self):
@@ -47,6 +48,10 @@ class simpleRNN():
             outputs=output,
             name="Model"
         ) 
+        print(model.summary)
+        return model
+    
+    def print_model(self, model):
         print(model.summary)
     
 
