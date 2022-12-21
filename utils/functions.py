@@ -12,7 +12,7 @@ if not sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
 
-def config_reader(path_to_json_conf:str)->dict:
+def config_reader(path_to_json_conf:str='../config/data_config.json')->dict:
     """Функция загрузки параметров конфигурации в память.
 
     Args:
@@ -30,7 +30,8 @@ def config_reader(path_to_json_conf:str)->dict:
     
     return config
 
-config = config_reader('../config/data_config.json')
+# Задаём переменную, которой присвоим словарь с переменными конфигурации
+config = config_reader() #'../config/data_config.json'
 
 def f1(y_true, y_pred):
     """Функция для расчета метрики f1_score, Precision, Recall
