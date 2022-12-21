@@ -4,8 +4,6 @@ import csv
 import numpy as np
 from tensorflow import keras
 from utils.functions import f1, config_reader
-from utils.data_reader import DataReader
-
 
 
 class MakeInference():
