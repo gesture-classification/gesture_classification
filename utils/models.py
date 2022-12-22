@@ -3,22 +3,22 @@ import numpy as np
 from tensorflow import keras
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
-from keras import layers
-from tensorflow.keras.models import Model
+from keras.layers import Layer
+from keras.models import Model
 
 # Импорт параметров
 from utils.functions import config_reader, callbacks, f1
 
 config = config_reader() #'../config/data_config.json'
 
-class SimpleRNN(Model):  # tf.keras.Model
+class SimpleRNN(Model):  
     """Класс создаёт модель SimpleRNN, наследуя класс от tf.keras.
     Параметры:
     ----------
     n_timesteps (_int_) - кол-во временных периодов
     n_channels (_int_) - кол-во датчиков
     output_units - 
-    units - размерность модели   
+    units - размерность модели из конфига 
     """    
     def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
         
@@ -31,10 +31,10 @@ class SimpleRNN(Model):  # tf.keras.Model
         self.loss = "mean_squared_error"
         
         #--------слои----------------
+   
         self.input_layer = self.x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
         self.layer1 = tf.keras.layers.BatchNormalization()
-        self.layer2 = tf.keras.layers.SimpleRNN(
-            units=units, return_sequences=True)
+        self.layer2 = tf.keras.layers.SimpleRNN(units=self.units, return_sequences=True)
         self.layer3 = tf.keras.layers.BatchNormalization()
         self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')
         
@@ -46,8 +46,9 @@ class SimpleRNN(Model):  # tf.keras.Model
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
-        output_layer = self.output_layer(x)
-        return output_layer # returns results of Output Layer
+        x = self.output_layer(x)
+        return x # returns results of Output Layer
+    
     
     def build_model(self):
         """Метод формирования модели
