@@ -11,6 +11,8 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 if not sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
+    
+
 
 def config_reader(path_to_json_conf:str='../config/data_config.json')->dict:
     """Функция загрузки параметров конфигурации в память.

@@ -6,7 +6,7 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 from keras import layers
 
 # Импорт параметров
-from utils.functions import config_reader, f1
+from utils.functions import config_reader, callbacks, f1
 
 config = config_reader() #'../config/data_config.json'
 
@@ -19,13 +19,15 @@ class SimpleRNN():
     output_units - 
     units - размерность модели   
     """    
-    def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
+    def __init__(self, X_train_nn, y_train_nn, #val_splt_coef, num_train, 
+                 units=config['simpleRNN_units']):
         super(SimpleRNN, self).__init__()
         self.n_timesteps = None #X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
         self.output_units = y_train_nn.shape[-1]
         self.units = units
         self.loss = "mean_squared_error"
+        #self.val_splt_coef = val_splt_coef
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
                
 
@@ -52,12 +54,26 @@ class SimpleRNN():
         return model
     
     def compile(self, model):
+        """Функция компилирования модели
+        """        
         compiled_model = model.compile(
             loss="mean_squared_error", 
             metrics=[f1],
             optimizer=tf.keras.optimizers.Adam(), # по умолчанию learning rate=10e-3
         )
         return compiled_model
+
+    # def fit(self, model):
+    #     fitted_model = model.fit(
+    #         X_train_nn = self.X_train_nn, 
+    #         y_train_nn = self.y_train_nn, 
+    #         validation_split=self.val_splt_coef, # validation_split изменяется в цикле
+    #         epochs=500,
+    #         verbose=1,
+    #         callbacks=callbacks(num_train) # остальные параметры - смотри в functions.py
+    #     )
+    #     return fitted_model
+        
     
 
 class LSTM():
