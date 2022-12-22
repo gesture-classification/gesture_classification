@@ -4,13 +4,14 @@ from tensorflow import keras
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 from keras import layers
+from tensorflow.keras.models import Model
 
 # Импорт параметров
 from utils.functions import config_reader, callbacks, f1
 
 config = config_reader() #'../config/data_config.json'
 
-class SimpleRNN(tf.keras.Model):
+class SimpleRNN(Model):  # tf.keras.Model
     """Класс создаёт модель SimpleRNN, наследуя класс от tf.keras.
     Параметры:
     ----------
@@ -20,8 +21,8 @@ class SimpleRNN(tf.keras.Model):
     units - размерность модели   
     """    
     def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
+        
         super(SimpleRNN, self).__init__()
-
         #-------параметры------------
         self.n_timesteps = None #X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
@@ -30,51 +31,40 @@ class SimpleRNN(tf.keras.Model):
         self.loss = "mean_squared_error"
         
         #--------слои----------------
-        self.input_layer = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
+        self.input_layer = self.x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
         self.layer1 = tf.keras.layers.BatchNormalization()
         self.layer2 = tf.keras.layers.SimpleRNN(
             units=units, return_sequences=True)
         self.layer3 = tf.keras.layers.BatchNormalization()
-        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation=tf.nn.sigmoid) #'sigmoid'
+        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')
         
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
-        #self.compiled_model = self.build_model()
+        self.compiled_model = self.build_model()
     
-    def call(self):
-        
+    def call(self, x):
         x = self.input_layer
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
-        output = self.output_layer(x)
+        output_layer = self.output_layer(x)
+        return output_layer # returns results of Output Layer
+    
+    def build_model(self):
+        """Метод формирования модели
+        """
+        model = tf.keras.Model(
+            inputs=self.input_layer,
+            outputs=self.output_layer,
+            name="model"
+        ) 
+        model.summary()
         
-        return output # Return results of Output Layer
-   
-
-    # def build_model(self):
-    #     """Метод формирования модели
-    #     """
-    #     input_channels = x = self.input_layer
-
-    #     #x = self.layer1(x)
-    #     #x = self.layer2(x)
-    #     #x = self.layer3(x)
-
-    #     #output = self.output_layer(x)
-        
-    #     model = tf.keras.Model(
-    #         inputs=input_channels,
-    #         outputs=output,
-    #         name="model"
-    #     ) 
-    #     model.summary()
-        
-    #     compiled_model = model.compile(
-    #         loss="mean_squared_error", 
-    #         metrics=[f1],
-    #         optimizer=tf.keras.optimizers.Adam(), # по умолчанию learning rate=10e-3
-    #     )
-    #     return compiled_model
+        compiled_model = model.compile(
+            loss="mean_squared_error", 
+            metrics=[f1],
+            optimizer=tf.keras.optimizers.Adam(), # по умолчанию learning rate=10e-3
+        )
+        return compiled_model
 
     # def fit(self, model, X_train_nn, y_train_nn, val_splt_coef, num_train):
     #     fitted_model = model.fit(
