@@ -27,6 +27,7 @@ class SimpleRNN():
         self.output_units = y_train_nn.shape[-1]
         self.units = units
         self.loss = "mean_squared_error"
+        #self.input_channels = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
         #self.val_splt_coef = val_splt_coef
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
                
