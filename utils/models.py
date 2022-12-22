@@ -20,20 +20,23 @@ class SimpleRNN(tf.keras.Model):
     units - размерность модели   
     """    
     def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
-        
         super(SimpleRNN, self).__init__()
 
+        #-------параметры------------
         self.n_timesteps = None #X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
         self.output_units = y_train_nn.shape[-1]
         self.units = units
         self.loss = "mean_squared_error"
+        
+        #--------слои----------------
         self.input_layer = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
         self.layer1 = tf.keras.layers.BatchNormalization()
         self.layer2 = tf.keras.layers.SimpleRNN(
             units=units, return_sequences=True)
         self.layer3 = tf.keras.layers.BatchNormalization()
-        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')
+        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation=tf.nn.sigmoid) #'sigmoid'
+        
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
         #self.compiled_model = self.build_model()
     
