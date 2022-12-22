@@ -19,8 +19,7 @@ class SimpleRNN():
     output_units - 
     units - размерность модели   
     """    
-    def __init__(self, X_train_nn, y_train_nn, #val_splt_coef, num_train, 
-                 units=config['simpleRNN_units']):
+    def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
         super(SimpleRNN, self).__init__()
         self.n_timesteps = None #X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
@@ -30,6 +29,7 @@ class SimpleRNN():
         #self.input_channels = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
         #self.val_splt_coef = val_splt_coef
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
+        self.compiled_model = self.build_model()
                
 
     def build_model(self):
@@ -45,18 +45,14 @@ class SimpleRNN():
         x = tf.keras.layers.BatchNormalization()(x)
 
         output = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')(x)
-
+        
         model = tf.keras.Model(
             inputs=input_channels,
             outputs=output,
             name="model"
         ) 
         print(model.summary())
-        return model
-    
-    def compile(self, model):
-        """Функция компилирования модели
-        """        
+        
         compiled_model = model.compile(
             loss="mean_squared_error", 
             metrics=[f1],
@@ -64,16 +60,16 @@ class SimpleRNN():
         )
         return compiled_model
 
-    # def fit(self, model):
-    #     fitted_model = model.fit(
-    #         X_train_nn = self.X_train_nn, 
-    #         y_train_nn = self.y_train_nn, 
-    #         validation_split=self.val_splt_coef, # validation_split изменяется в цикле
-    #         epochs=500,
-    #         verbose=1,
-    #         callbacks=callbacks(num_train) # остальные параметры - смотри в functions.py
-    #     )
-    #     return fitted_model
+    def fitting(self, model, X_train_nn, y_train_nn, val_splt_coef, num_train):
+        fitted_model = model.fit(
+            X_train_nn = X_train_nn, 
+            y_train_nn = y_train_nn, 
+            validation_split=val_splt_coef, # validation_split изменяется в цикле
+            epochs=500,
+            verbose=1,
+            callbacks=callbacks(num_train) # остальные параметры - смотри в functions.py
+        )
+        return fitted_model
         
     
 
