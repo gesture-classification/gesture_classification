@@ -48,11 +48,9 @@ class simpleRNN():
             outputs=output,
             name="Model"
         ) 
-        print(model.summary)
+        print(model.summary()) #tf.keras.Model.summary(model)
         return model
     
-    def print_model(self, model):
-        print(model.summary)
     
 
 class LSTM():
