@@ -25,8 +25,7 @@ class simpleRNN():
         self.output_units = y_train_nn.shape[-1]
         self.units = units 
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
-        
-        
+                
 
 
     def build_model(self):
@@ -46,9 +45,9 @@ class simpleRNN():
         model = tf.keras.Model(
             inputs=input_channels,
             outputs=output,
-            name="Model"
+            name="model"
         ) 
-        print(model.summary()) #tf.keras.Model.summary(model)
+        print(model.summary())
         return model
     
     
@@ -91,6 +90,8 @@ class LSTM():
         model_lstm = tf.keras.Model(
             inputs=input_channels,
             outputs=output,
-            name="Model_LSTM"
+            name="model_LSTM"
         )        
-        print(model_lstm.summary)
+        print(model_lstm.summary())
+        
+        return model_lstm
