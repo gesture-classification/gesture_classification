@@ -23,33 +23,34 @@ class SimpleRNN(Model):
     def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
         
         super(SimpleRNN, self).__init__()
-        #-------параметры------------
+        #------- параметры ------------
         self.n_timesteps = None #X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
         self.output_units = y_train_nn.shape[-1]
         self.units = units
-        self.loss = "mean_squared_error"
-        
-        #--------слои----------------
-   
+                
+        #-------- слои модели ----------------
         self.input_layer = self.x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
-        self.layer1 = tf.keras.layers.BatchNormalization()
-        self.layer2 = tf.keras.layers.SimpleRNN(units=self.units, return_sequences=True)
-        self.layer3 = tf.keras.layers.BatchNormalization()
-        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')
+        self.layer1 = tf.keras.layers.BatchNormalization()(self.x)
+        self.layer2 = tf.keras.layers.SimpleRNN(units=self.units, return_sequences=True)(self.x)
+        self.layer3 = tf.keras.layers.BatchNormalization()(self.x)
+        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')(self.x)
         
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
-        self.compiled_model = self.build_model()
     
-    def call(self, x):
+        self.compiled_model = self.build_model()
+        #self.fit_model = self.fit()     
+        
+    
+    def call(self):
         x = self.input_layer
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.output_layer(x)
         return x # returns results of Output Layer
-    
-    
+
+        
     def build_model(self):
         """Метод формирования модели
         """
@@ -59,24 +60,27 @@ class SimpleRNN(Model):
             name="model"
         ) 
         model.summary()
-        
-        compiled_model = model.compile(
+        return model
+    
+    
+    def compile(self):
+        self.model.compile(
             loss="mean_squared_error", 
             metrics=[f1],
-            optimizer=tf.keras.optimizers.Adam(), # по умолчанию learning rate=10e-3
+            optimizer='adam', # tf.keras.optimizers.Adam() по умолчанию learning rate=10e-3
         )
-        return compiled_model
-
-    # def fit(self, model, X_train_nn, y_train_nn, val_splt_coef, num_train):
-    #     fitted_model = model.fit(
-    #         X_train_nn = X_train_nn, 
-    #         y_train_nn = y_train_nn, 
-    #         validation_split=val_splt_coef, # validation_split изменяется в цикле
-    #         epochs=500,
-    #         verbose=1,
-    #         callbacks=callbacks(num_train) # остальные параметры - смотри в functions.py
-    #     )
-    #     return fitted_model
+        
+    
+    def fit(self, model, X_train_nn, y_train_nn, val_splt_coef, num_train):
+        fitted_model = model.fit(
+            X_train_nn = X_train_nn, 
+            y_train_nn = y_train_nn, 
+            validation_split=val_splt_coef, # validation_split изменяется в цикле
+            epochs=500,
+            verbose=1,
+            callbacks=callbacks(num_train) # остальные параметры - смотри в functions.py
+        )
+        return fitted_model
         
     
 
