@@ -31,9 +31,9 @@ class SimpleRNN(Model):
                 
         #-------- слои модели ----------------
         self.input_layer = x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
-        self.layer1 = tf.keras.layers.BatchNormalization()(x)
-        self.layer2 = tf.keras.layers.SimpleRNN(units=self.units, return_sequences=True)(x)
-        self.layer3 = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.SimpleRNN(units=self.units, return_sequences=True)(x)
+        x = tf.keras.layers.BatchNormalization()(x)
         self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')(x)
         
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
@@ -72,16 +72,16 @@ class SimpleRNN(Model):
         )
         
     
-    def fit(self, model, X_train_nn, y_train_nn, val_splt_coef, num_train):
-        fitted_model = model.fit(
-            X_train_nn = X_train_nn, 
-            y_train_nn = y_train_nn, 
-            validation_split=val_splt_coef, # validation_split изменяется в цикле
-            epochs=500,
-            verbose=1,
-            callbacks=callbacks(num_train) # остальные параметры - смотри в functions.py
-        )
-        return fitted_model
+    # def fit(self, model, X_train_nn, y_train_nn, validation_split, callbacks):
+    #     fitted_model = model.fit(
+    #         X_train_nn, 
+    #         y_train_nn, 
+    #         validation_split, # validation_split изменяется в цикле
+    #         callbacks, #=callbacks(num_train) # остальные параметры - смотри в functions.py
+    #         epochs=500,
+    #         verbose=1,
+    #     )
+    #     return fitted_model
         
     
 
