@@ -30,15 +30,16 @@ class SimpleRNN(Model):
         self.units = units
                 
         #-------- слои модели ----------------
-        self.input_layer = self.x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
-        self.layer1 = tf.keras.layers.BatchNormalization()(self.x)
-        self.layer2 = tf.keras.layers.SimpleRNN(units=self.units, return_sequences=True)(self.x)
-        self.layer3 = tf.keras.layers.BatchNormalization()(self.x)
-        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')(self.x)
+        self.input_layer = x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
+        self.layer1 = tf.keras.layers.BatchNormalization()(x)
+        self.layer2 = tf.keras.layers.SimpleRNN(units=self.units, return_sequences=True)(x)
+        self.layer3 = tf.keras.layers.BatchNormalization()(x)
+        self.output_layer = tf.keras.layers.Dense(units=self.output_units, activation='sigmoid')(x)
         
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
-    
-        self.compiled_model = self.build_model()
+        
+        #self.model = self.build_model()
+        #self.model = self.compile()
         #self.fit_model = self.fit()     
         
     
