@@ -1,5 +1,5 @@
 from utils.data_reader import DataReader
-from utils.functions import config_reader
+#from utils.functions import config_reader
 
 import numpy as np
 import mne
@@ -10,9 +10,9 @@ from tensorflow import keras
 
 class DataLoader():
     
-    def __init__(self, id_pilot):
+    def __init__(self, id_pilot, config):
         super(DataLoader, self).__init__()
-        self.config = config_reader()
+        self.config = config
         self.X_train = DataReader(
             self.config['PATH'] + self.config['mounts'][str(id_pilot)]['path_X_train']).data
         self.y_train = DataReader(
