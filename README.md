@@ -82,14 +82,15 @@ gesture_classification
 
 
 ## Data and methods
-Data acquisition was conducted as follows:  there were chosen 3  people (operators) with healthy hands on which were attached 50 optomyographical $^1$ sensors. Each operator was bending and unclenching his fingers, performing a given sequence of gestures.
+Data acquisition was conducted as follows: 3 randomly chosen people (operators) with  healthy hands  takes part. 50 optomyographical $^1$ sensors were attached at their forearms. Each operator was bending and unclenching his fingers, performing a given sequence of gestures.
 
 $^1$ Optomyography (OMG) is a method of monitoring muscle activity with optical sensors. OMG infrared light source emits impulses toward the muscle under the skin. If the muscle is neutral, the light will be almost completely reflected; in case it is stretched or compressed - partially diffused. So the amount of diffused light is measured by a light detector(Fig.1-2).
 
 <p align="center"> 
 <img src="/logs_and_figures/fig_0-2_en.png" width="500" height="200"> <br>Fig.1-1 - Muscle tension detection using the optomyography method.</p>
 
-The experiment details were as follows: since every operator takes some time between observing a gesture and performing a gesture, it can be seen a gap between the two line graphs below. On the second, each gesture was started or ended with the "open palm" gesture. On the third, from the whole set of gestures only distinctive ones were: either with clenching or unclenching fingers to simplify recognition. As result, experimental data was split into 2 parts, and the sequence of original gestures was saved into arrays X_train, X_test, and y_train respectively. An example of the acquired data is represented in the figure below.
+The experiment details were as follows: since every operator takes some time between receiving a comand and performing a gesture, it can be seen a gap between the two line graphs below. The lower graph illustrates commands to perform gesture operator received while at the upper graph sensor logs are represented. Each gesture was started or ended with the "open palm" gesture. To simplify recognition, from the whole possible variety of human hand gestures only distinctive ones with clenching or unclenching fingers were considered.
+When the data collection was completed the whole dataset from every operator was split into 2 parts, and the sequence of original data was saved into arrays X_train (1st graph) with y_train (2nd graph) and X_test (1st graph) respectively.
 
 ![Experimental dara](/logs_and_figures/fig_2-1.png)
 <p align="center">Fig.1-2 - Experimental data of pilot #3.</p>
@@ -147,8 +148,8 @@ Example:
 ## Experimental data analysis
 
 Original experimental data of all pilots was loaded from the archive and processed using the [*mne*](https://mne.tools/stable/index.html) library as follows:
-* writing an array of raw dataset for each pilot
-* deleting some cropped and unreadable data of class "-1".
+* writing an array of raw dataset for each pilot and unify data along the timeline
+* deleting some cropped data.
 
 As the result of the EDA ([see notebook 1_EDA_sprint_3.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/1_EDA_sprint_3.ipynb)), it was inferred:
 * each gesture can be identified by distinctive signal levels (see [*3_boxplots_clear_gests_sens_gest.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/3_boxplots_clear_gests_sens_gest.ipynb)
@@ -160,7 +161,7 @@ As the result of the EDA ([see notebook 1_EDA_sprint_3.ipynb*](https://github.co
   
 ![Signals normalization](/logs_and_figures/fig_1-5.png)
 
-A comparative analysis of the models, trained with EDA and without it, showed that chosen signal processing methods worsened prediction. Thus, it was chosen to avoid signal processing and use raw data for model training . 
+A comparative analysis of the models, trained with EDA and without it, showed that chosen signal processing methods worsened prediction. Thus, it was chosen to avoid signal processing and use raw data for model training. 
 
 :arrow_up:[ to contents](README.md#Contents)
 
@@ -181,7 +182,7 @@ Every set of train and test data teaches consecutively 2 models, having a simila
 <p align="center">  Fig.2-2 - SimpleRNN model learning progress. </p>
 
 
-As can be seen from Fig.2-2, the predictive quality does not change much. On the other hand, the model predicts the gesture change period successfully.
+As can be seen from Fig.2-2, the predictive quality of the classification task does not change much. On the other hand, the model predicts the gesture change period successfully.
 
 **LSTM model** consists of several LSTM-layers with an additional dense layer. The layer structure was empirically defined from the best f1-score. Model training was carried on the dataset *X_train* and labeled data *y_train_ch*, which was received from SimpleRNN. Then trained LSTM model was used to predict the test data. The learning progress can be observed in Fig.2-3.
 
@@ -203,6 +204,6 @@ The learning progress as well as the other model parameters, figures, and variab
 
 
 ## Conclusion
-As a result of the study, it was created the data processing algorithm and the machine learning model, which is predicting wrist gestures by muscle signals. The model can be used to create better hand prostheses.
+As a result of the study, the data processing algorithm and the machine learning model, predicting wrist gestures by muscle signals, were created. The model can be used to create better hand prostheses.
 
 :arrow_up:[ to contents](README.md#Contents)
