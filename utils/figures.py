@@ -23,13 +23,11 @@ if not sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
 
-import os
-import time
 
 # Загрузка констант из файла конфигурации
 from utils.functions import config_reader
-config = config_reader('../config/data_config.json')
-
+config = config_reader() #'../config/data_config.json'
+ 
 
 # Словарь c названиями файлов в архиве для агрегации данных 
 mounts = config['mounts']
@@ -62,7 +60,6 @@ def get_sensor_list(Pilot_id:int, mounts:dict, print_active=False):
     
     df = get_dataframe(Pilot_id, mounts=mounts).T
 
-    
     # Создадим список индексов активных и пассивных датчиков. Среднее значение сигнала не превышает 200 единиц.
     active_sensors, passive_sensors = list(), list()
       
@@ -134,11 +131,7 @@ def get_all_sensors_plot(Pilot_id, timesteps:list, mounts:dict, plot_counter=1):
     )
 
     #fig.show()
-
-    # сохраним результат в папке figures. Если такой папки нет, то создадим её
-    if not os.path.exists("/gesture_classification/logs_and_figures"):
-        os.mkdir("/gesture_classification/logs_and_figures")
-    
+   
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
 
 
@@ -339,6 +332,7 @@ def get_signal_derivative_and_normalized_plot(Pilot_id:int, timesteps:list, sens
     # Нормализация данных
     scaler = StandardScaler()
     scaler.fit(df_1)
+    
     df_2 = pd.DataFrame(scaler.transform(df_1), index = range(df_1.index[0], df_1.index[-1]+1))
        
     fig = make_subplots(
@@ -348,7 +342,6 @@ def get_signal_derivative_and_normalized_plot(Pilot_id:int, timesteps:list, sens
             f'Квадрат производной сигналов датчиков', f'Квадрат производной нормализованных сигналов датчиков'
         ), vertical_spacing = 0.1,
     )
-
 
     df_3 = pd.DataFrame(df_1.diff(), index = range(df_1.index[0], df_1.index[-1]+1))
 
