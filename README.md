@@ -15,13 +15,13 @@
 
 ## Introdcution
 
-When a human loses an organ or limb loss, his functions decrease dramatically. Luckily technological progress in biomedicine provided us with prostheses like artificial kidneys, mechanical ventilation, artificial heart valves, bionic hand, etc., so lost body functions could be partially recovered. The compensated-to-original functions ratio depends on multiple factors such as the complexity of the lost organ, the number of original functions and their variability, and so on. Due to the large number of finger gestures, hand prosthetics is considered a very complex assignment. 
+When a human loses an organ or limb, his functions decrease dramatically. Luckily technological progress in biomedicine provided us with prostheses like artificial kidneys, mechanical ventilation, artificial heart valves, bionic hand, etc., so lost body functions could be partially recovered. The compensated-to-original functions ratio depends on multiple factors such as the complexity of the lost organ, the number of original functions and their variability, and so on. Due to the large number of finger gestures, hand prosthetics is considered a very complex assignment. 
 
-In 2020 in Russia there were about 20,000 people with upper limbs amputations, half of them missing forearm or wrist([Grinin V. M., Shestemirova E. I.](http://dx.doi.org/10.32687/0869-866X-2020-28-3-380-384). Notably, only some 500 people were able to get operated prostheses from the national prosthetics program [Rosstat](https://rosstat.gov.ru/storage/mediabank/ST90u1EJ/2-30.doc). Thus, due to the lack of prostheses supply and because of its direct impact on human life quality functional hands prosthetics is also of high importance.
+In 2020 in Russia there were about 20,000 people with upper limbs amputations, half of them missing forearm or wrist ([Grinin V. M., Shestemirova E. I.](http://dx.doi.org/10.32687/0869-866X-2020-28-3-380-384)). Notably, only some 500 people were able to get operated prostheses from the national prosthetics program ([Rosstat](https://rosstat.gov.ru/storage/mediabank/ST90u1EJ/2-30.doc)). Thus, due to the lack of prostheses supply and because of its direct impact on human life quality functional hands prosthetics is also of high importance.
 
 To provide better functional wrist prostheses the company [Motorica](https://motorica.org/) designed [a Kaggle competition](https://www.kaggle.com/competitions/motorica-advanced-gesture-classification) with the task of predicting wrist gestures from muscle contractions.
 
-During the competition it was designed a predictive mathematical model, conducting the following tasks:
+During the competition a predictive mathematical model was designed to perform the following tasks:
 * gesture change period identification.
 * gesture classification by muscle signals from optomyographical $^1$ sensors.
 
@@ -82,7 +82,7 @@ gesture_classification
 
 
 ## Data and methods
-Data acquisition was conducted as follows:  there were chosen 3  people (operators) with healthy hands and on which were attached 50 optomyographical $^1$ sensors. Then each operator was bending and unclenching his/her fingers, performing a given sequence of gestures.
+Data acquisition was conducted as follows:  there were chosen 3  people (operators) with healthy hands on which were attached 50 optomyographical $^1$ sensors. Each operator was bending and unclenching his fingers, performing a given sequence of gestures.
 
 $^1$ Optomyography (OMG) is a method of monitoring muscle activity with optical sensors. OMG infrared light source emits impulses toward the muscle under the skin. If the muscle is neutral, the light will be almost completely reflected; in case it is stretched or compressed - partially diffused. So the amount of diffused light is measured by a light detector(Fig.1-2).
 
@@ -116,7 +116,7 @@ python main.py
 <br>
 
 The term **inference** means gesture prediction using a fully trained machine learning model from user data. The inference is performed using a class *MakeInference*, which takes the path to test data (*path_to_X_test_dataset*) as an argument and saves the prediction into the file "predictions.csv" in the project root directory. The methods of the class are as follows:
-- loading of variables from *data_config.json*; 
+- loading of constants from *data_config.json*; 
 - loading of train and test data using *DataReader*; 
 - loading of a pre-trained model from the *models* folder;
 - learning on the given data;
@@ -150,7 +150,7 @@ Original experimental data of all pilots was loaded from the archive and process
 * writing an array of raw dataset for each pilot
 * deleting some cropped and unreadable data of class "-1".
 
-In result of the EDA ([see notebook 1_EDA_sprint_3.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/1_EDA_sprint_3.ipynb)), it was inferred:
+As the result of the EDA ([see notebook 1_EDA_sprint_3.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/1_EDA_sprint_3.ipynb)), it was inferred:
 * each gesture can be identified by distinctive signal levels (see [*3_boxplots_clear_gests_sens_gest.ipynb*](https://github.com/gesture-classification/gesture_classification/blob/main/notebooks/3_boxplots_clear_gests_sens_gest.ipynb)
 * sensors can be categorized by the level of the signal into active and passive (see Fig.1-3);
 
@@ -160,16 +160,16 @@ In result of the EDA ([see notebook 1_EDA_sprint_3.ipynb*](https://github.com/ge
   
 ![Signals normalization](/logs_and_figures/fig_1-5.png)
 
-A comparative analysis of the models, trained with EDA and without showed that chosen signal processing methods worsened prediction. Thus, it was chosen to avoid signal processing and use raw data for model training . 
+A comparative analysis of the models, trained with EDA and without it, showed that chosen signal processing methods worsened prediction. Thus, it was chosen to avoid signal processing and use raw data for model training . 
 
 :arrow_up:[ to contents](README.md#Contents)
 
 
 ## Machine learning models structure
 
-Every set of train and test data learns 2 models, having a similar structure as shown in Fig.2-1 and parameters as follows:
+Every set of train and test data teaches consecutively 2 models, having a similar structure as shown in Fig.2-1 and parameters as follows:
 - SimpleRNN, used for labeling the data by predicting the period of gesture change (it is expressed as a "step" on the graph);
-- LSTM, which is learning from OMG signals and the labeling data. 
+- LSTM, which is learning from OMG signals and the labeled data. 
   
 ![Model structure](/logs_and_figures/fig_2-2.png)
 <p align="center">  Fig.2-1 - Machine learning model structure. </p>
@@ -183,13 +183,13 @@ Every set of train and test data learns 2 models, having a similar structure as 
 
 As can be seen from Fig.2-2, the predictive quality does not change much. On the other hand, the model predicts the gesture change period successfully.
 
-**LSTM model** consists of several LSTM-layers with an additional dense layer. The layer structure was empirically defined from the best f1-score. Model training was carried on the dataset *X_train* and labeled data *y_train_ch*. Then trained LSTM model was used to predict the test data. The learning progress can be observed in Fig.2-3.
+**LSTM model** consists of several LSTM-layers with an additional dense layer. The layer structure was empirically defined from the best f1-score. Model training was carried on the dataset *X_train* and labeled data *y_train_ch*, which was received from SimpleRNN. Then trained LSTM model was used to predict the test data. The learning progress can be observed in Fig.2-3.
 
 ![LSTM model learning progress](/logs_and_figures/fig_2-5.png)
 
 <p align="center">  Fig.2-3 - LSTM model learning progress. </p>
 
-The u-shape pattern of the learning curve in Fig.2-3 points on the model overfitting. Non-optimally chosen parameters are leading to an increase in the learning time and growth of prediction errors. Meanwhile, it reached fair model quality predicting correctly some of 2/3 of datapoints  (f1-score is 0.69632). The result can be observed in the graph provided below.
+The u-shape pattern of the learning curve in Fig.2-3 indicates the model overfitting. Non-optimally chosen parameters are leading to an increase in the learning time and growth of prediction errors. Meanwhile, it reached fair model quality predicting correctly some of 2/3 of datapoints  (f1-score is 0.69632). The result can be seen in the graph provided below.
 
 ![Gesture prediction](/logs_and_figures/fig_2-6.png)
 
@@ -199,7 +199,7 @@ The u-shape pattern of the learning curve in Fig.2-3 points on the model overfit
 
 ## Experiment logging
 
-The learning progress as well as other model parameters, figures, and variables were logged using the Comet_ml library. These outcomes can be observed on the [Comet_ml page](https://www.comet.com/alex1iv/gesture-classification/view/new/panels).
+The learning progress as well as the other model parameters, figures, and variables were logged using the Comet_ml library. These outcomes can be observed on the [Comet_ml page](https://www.comet.com/alex1iv/gesture-classification/view/new/panels).
 
 
 ## Conclusion
