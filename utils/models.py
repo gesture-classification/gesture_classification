@@ -38,19 +38,6 @@ class SimpleRNN(Model):
         
         print(f"input_shape = {(self.n_timesteps, self.n_channels)} | output_units = {self.output_units}")
         
-        #self.model = self.build_model()
-        #self.model = self.compile()
-     
-        
-    
-    # def call(self):
-    #     x = self.input_layer
-    #     x = self.layer1(x)
-    #     x = self.layer2(x)
-    #     x = self.layer3(x)
-    #     x = self.output_layer(x)
-    #     return x # returns results of Output Layer
-
         
     def build_model(self):
         """Метод формирования модели
@@ -62,15 +49,7 @@ class SimpleRNN(Model):
         ) 
         model.summary()
         return model
-    
-    
-    # def compile(self):
-    #     self.model.compile(
-    #         loss="mean_squared_error", 
-    #         metrics=[f1],
-    #         optimizer='adam', # tf.keras.optimizers.Adam() по умолчанию learning rate=10e-3
-    #     )
-        
+          
 
 
 class LSTM(Model):
