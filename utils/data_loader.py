@@ -1,19 +1,24 @@
 from utils.data_reader import DataReader
-from utils.reader_config import read_config
+from utils.functions import config_reader
 
 import numpy as np
 import mne
+import os
 import pandas as pd
 from tensorflow import keras
 
 
 class DataLoader():
     
-    def __init__(self, path_to_config):
+    def __init__(self, id_pilot):
         super(DataLoader, self).__init__()
-        self.config = read_config(path_to_config)
-        self.X_train = DataReader(self.config['path_to_x_trn']).data
-        self.y_train = DataReader(self.config['path_to_y_trn']).data
+        self.config = config_reader()
+        self.X_train = DataReader(
+            self.config['PATH'] + self.config['mounts'][str(id_pilot)]['path_X_train']).data
+        self.y_train = DataReader(
+            self.config['PATH'] + self.config['mounts'][str(id_pilot)]['path_y_train']).data
+        #self.X_train = DataReader(self.config['path_to_x_trn']).data
+        #self.y_train = DataReader(self.config['path_to_y_trn']).data
         self.train_nn = self.create_train_nn(self.X_train, self.y_train, self.config)
         self.X_train_nn = self.train_nn[0]
         self.y_train_nn = self.train_nn[1]
