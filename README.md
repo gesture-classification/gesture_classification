@@ -40,43 +40,41 @@ During the competition a predictive mathematical model was designed to perform t
 gesture_classification
 ├── .git
 ├── .gitignore
-├── data             # data archive
+├── data            # data archive
+... ...            
 │   └── motorica-advanced-gesture-classification.zip
 ├── dockerfile
 ├── logs_and_figures # charts, logs, and submits
 │   ├── fig_0-1.PNG
 ...
-│   ├── fig_2-5.png
-│   ├── y_test_submit_rnn_LSTM(0.69641).csv
 │   └── y_test_submit_rnn_LSTM.csv
 ├── main.py
 ├── models           # models and weights 
-│   ├── best_model_rnn_1.hdf5
-│   ├── best_model_rnn_2.hdf5
-│   ├── best_model_rnn_3.hdf5
-│   ├── lstm.py
-│   ├── model.py
-│   ├── model_lstm_1
-│   ├── model_lstm_2
-│   ├── model_lstm_3
-│   ├── srnn.py
-│   ├── temp_best_model
-│   └── weights
+│   ├── saved_models
+│   │   ├── model_lstm_1
+│   │   ├── model_lstm_2
+│   │   └── model_lstm_3
+│   │── weights_best__models
+│   │   ├── best_model_rnn_1.hdf5
+│   │   ├── best_model_rnn_2.hdf5
+│   │   └── best_model_rnn_3.hdf5
+│   ├── __ init __.py
+│   └── models.py
 ├── notebooks        # notebooks
 │   ├── .cometml-runs
 │   ├── 1_EDA_sprint_3.ipynb
 │   ├── 2_model_SRNN_LSTM.ipynb
 │   └── 3_boxplots_clear_gests_sens_gest.ipynb
-├── README.md
-├── requirements.txt 
+├── README.md        # readme in English
+├── README_ru.md     # readme in Russian
+├── requirements.txt
 └── utils            # functions, variables, and data loaders
-    ├── credentials.json
+    ├── __ init __.py
+    ├── data_loader.py
     ├── data_reader.py
     ├── figures.py
     ├── functions.py
-    ├── inference.py
-    ├── __ init __.py
-    └── __pycache__
+    └── inference.py
 ```
 </details>
 
