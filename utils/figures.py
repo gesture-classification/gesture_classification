@@ -26,7 +26,7 @@ if not sys.warnoptions:
 
 # Загрузка констант из файла конфигурации
 from utils.functions import config_reader
-config = config_reader() #'../config/data_config.json'
+config = config_reader() 
  
 
 # Словарь c названиями файлов в архиве для агрегации данных 
@@ -34,10 +34,15 @@ mounts = config['mounts']
 
 def get_dataframe(Pilot_id:int, mounts:dict, data:np.array='X_train')-> pd.DataFrame: 
     """ Функция создания датафрейма из данных словаря
+    Аргументы:
+    ---------
+    Pilot_id (_int_)- номер пилот
+    mounts - словарь с данными, из которого они читаются
+    data - ключ словаря
     
     Returns:
+    ---------
     numpy: np.array
-     
     """
     data = mounts[Pilot_id][data]
     
@@ -73,8 +78,8 @@ def get_sensor_list(Pilot_id:int, mounts:dict, print_active=False):
             passive_sensors.append(i)
 
     if print_active is True:
-        print(f"Активные датчики пилота " + str(Pilot_id) + ": ", active_sensors)
-        print(f"Пассивные датчики пилота " + str(Pilot_id) + ": ", passive_sensors) 
+        print(f"Active sensors of pilot " + str(Pilot_id) + ": ", active_sensors)
+        print(f"Passive sensors of pilot " + str(Pilot_id) + ": ", passive_sensors) 
     
     return active_sensors, passive_sensors 
 
@@ -97,9 +102,9 @@ def get_signals_plot(data, mounts:dict, test_id:list, plot_counter:int):
     
             plt.sca(axx[n])
             plt.plot(data[id].T, lw=0.5)
-            plt.title(f'Размер наблюдения: {data[id][mount_name].T.shape[0]} временных промежутков')
+            plt.title(f'Test duration: {data[id][mount_name].T.shape[0]} periods') #Размер наблюдения..временных промежутков
         
-        fig.suptitle(f"Рис. {plot_counter} - Сигналы датчиков в наблюдениях  пилота {mount_name}", y=-0.1, fontsize=14)
+        fig.suptitle(f"Fig.{plot_counter} - Sensor signals of pilot #{mount_name}", y=-0.1, fontsize=14) # Сигналы датчиков в наблюдениях  пилота
         fig.tight_layout()
         
         plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
@@ -123,9 +128,9 @@ def get_all_sensors_plot(Pilot_id, timesteps:list, mounts:dict, plot_counter=1):
     fig = px.line(data_frame=df.iloc[timesteps[0]:timesteps[1],:])
     
     fig.update_layout(
-        title=dict(text=f'Рис. {plot_counter} - сигналы датчиков пилота {Pilot_id}', x=.5, y=0.05, xanchor='center'), 
-        xaxis_title_text = 'Время, сек', yaxis_title_text = 'Сигнал датчиков', # yaxis_range = [0, 3000],
-        legend_title_text='Индекс <br>датчика',
+        title=dict(text=f'Fig.{plot_counter} - sensor signals of pilot #{Pilot_id}', x=.5, y=0.05, xanchor='center'),  #сигналы датчиков пилота
+        xaxis_title_text = 'Periods', yaxis_title_text = 'Sensors signals', # yaxis_range = [0, 3000], Время, сек
+        legend_title_text='Sensor <br> index',
         width=600, height=400,
         margin=dict(l=100, r=60, t=80, b=100),
     )
@@ -154,19 +159,21 @@ def get_active_passive_sensors_plot(Pilot_id:int, timesteps:list, mounts:dict, p
 
    
     fig = make_subplots(rows=1, cols=2, 
-                        subplot_titles=('активные датчики', 'пассивные датчики')
+                        subplot_titles=('active sensors', 'passive sensors') #'активные датчики', 'пассивные датчики'
     )
     
     for i in df_1.columns: fig.add_trace(go.Scatter(x=df_1.index, y=df_1[i], name=str(df[i].name)), row=1, col=1)
 
     for i in df_2.columns: fig.add_trace(go.Scatter(x=df_2.index, y=df_2[i], name=str(df[i].name)), row=1, col=2)
 
-    fig.update_layout(title={'text':f'Рис. {plot_counter} - Активные и пассивные датчики пилота {Pilot_id} в период {timesteps[0],timesteps[1]}', 'x':0.5, 'y':0.05}
-    )
+    fig.update_layout(title={'text':f'Fig.{plot_counter} - Active and passive sensors of pilot #{Pilot_id} within the period {timesteps[0],timesteps[1]}', 'x':0.5, 'y':0.05}
+    ) #Активные и пассивные датчики пилота .. в период
 
     fig.update_layout(width=1000, height=400, legend_title_text ='Номер датчика',
-                        xaxis_title_text  = 'Время',  yaxis_title_text = 'Сигнал датчика', yaxis_range=  [0, 4000], 
-                        xaxis2_title_text = 'Время', yaxis2_title_text = 'Сигнал датчика', yaxis2_range= [0 , 200],
+                        xaxis_title_text  = 'Period', # Время
+                        yaxis_title_text = 'Sensor signal', #Сигнал датчика
+                        yaxis_range=  [0, 4000], 
+                        xaxis2_title_text = 'Period', yaxis2_title_text = 'Sensor signal', yaxis2_range= [0 , 200],
                         margin=dict(l=100, r=60, t=80, b=100), 
                         #showlegend=False # легенда загромождает картинку
     )
@@ -196,15 +203,19 @@ def plot_history(history, plot_counter:int):
 
     ax[0].plot(epochs, loss, 'b', label='Training loss')
     ax[0].plot(epochs, val_loss, 'r', label='Validation loss')
-    ax[0].set_title('Качество обучения модели')
+    ax[0].set_xlabel('Epoch', size=11)
+    ax[0].set_ylabel('Loss', size=11)
+    ax[0].set_title('Training and validation loss') # Качество обучения модели
     ax[0].legend()
 
     ax[1].plot(epochs, f1_sc, 'b', label='Training f1_score')
     ax[1].plot(epochs, f1_sc_val, 'r', label='Training val_f1_score')
-    ax[1].set_title(f"Изменение f1_score") # изменение f1-score
+    ax[1].set_xlabel('Epoch', size=11)
+    ax[1].set_ylabel('F1-score', size=11)
+    ax[1].set_title(f"F-1 score") # изменение f1-score
     ax[1].legend()
 
-    fig.suptitle(f"Рис. {plot_counter} - Ход обучения модели", y=-0.1, fontsize=14)
+    fig.suptitle(f"Fig.{plot_counter} - Model learning", y=-0.1, fontsize=14) #Ход обучения модели
               
     fig.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
     #fig.show(); #- не вызывать для корретного логгирования
@@ -224,38 +235,37 @@ def get_gesture_prediction_plot(Pilot_id:int, i:int, y_pred_train_nn_mean, mount
     X_train_nn = mounts[Pilot_id]['X_train_nn']
     y_train_nn = mounts[Pilot_id]['y_train_nn']
     
-
     fig, ax = plt.subplots(4, 1, sharex=True, figsize=(10, 8))
-    plt.suptitle(f'Рис. {plot_counter} - наблюдение {i} пилота {Pilot_id}' , y=-0.01, fontsize=14)
+    plt.suptitle(f'Fig.{plot_counter} - test #{i} of pilot {Pilot_id}' , y=-0.01, fontsize=14) #наблюдение
     
     plt.subplots_adjust(  left=0.1,   right=0.9,
                         bottom=0.1,     top=0.9,
                         wspace=0.1,  hspace=0.4)
  
     ax[0].plot(X_train_nn[i])
-    ax[0].set_title('Сигналы датчиков ОМГ')
+    ax[0].set_title('OMG sensors signals') #Сигналы датчиков ОМГ
 
     ax[1].imshow(y_train_nn[i].T, origin="lower")
     ax[1].set_aspect('auto')
-    ax[1].set_title('Класс жеста манипулятора')
+    ax[1].set_title('Gesture class') #Класс жеста манипулятора
     ax[1].set_yticks(
         np.arange(5),  ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
     )
 
     ax[2].imshow(y_pred_train_nn_mean[i].T, origin="lower")
     ax[2].set_aspect('auto')
-    ax[2].set_title('Предсказание вероятностей появления классов жестов')
+    ax[2].set_title('Predicted probability of gesture class') #Предсказание вероятностей появления классов жестов
     ax[2].set_yticks(
         np.arange(5), ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
     )
 
     ax[3].plot(y_pred_train_nn_mean[i].argmax(axis=-1))
     ax[3].set_aspect('auto')
-    ax[3].set_title('Предсказание классов жестов')
+    ax[3].set_title('Predicted gesture class')
     ax[3].set_yticks(
         np.arange(5), ['Open', 'Pistol', 'Thumb', 'OK', 'Grab']
     )
-    ax[3].set_xlabel('Время')
+    ax[3].set_xlabel('Period') #Время
     plt.tight_layout()
     
     plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
@@ -282,7 +292,7 @@ def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts:di
 
     
     fig = make_subplots(rows=2, cols=1, 
-        subplot_titles=(f'X_train - сигналы датчиков', 'y_train - сигнал манипулятора'), vertical_spacing = 0.15,
+        subplot_titles=(f'X_train - sensors signals', 'y_train - original manipulator command'), vertical_spacing = 0.15,
     )
 
     for i in df_1.columns: 
@@ -293,13 +303,13 @@ def get_signal_and_train_plots(Pilot_id, timesteps:list, sensors:list, mounts:di
         fig.add_trace(go.Scatter(x=df_1.index, y=df_2[i], name=str(df_1[i].name)), row=2, col=1)
 
     
-    fig.update_layout(title={'text':f'Рис. {plot_counter} - Cигналы датчиков {sensors} пилота {Pilot_id} и сигнал манипулятора', 
+    fig.update_layout(title={'text':f'Fig. {plot_counter} - Sensors #{sensors} signals of the pilot #{Pilot_id} and original manipulator command', 
     'x':0.5, 'y':0.01}
     )
 
-    fig.update_layout(width=600, height=600, legend_title_text ='Номер датчика',
-                        xaxis_title_text  = 'Время',  yaxis_title_text = 'Сигнал датчика', #yaxis_range=[1500, 1700], 
-                        xaxis2_title_text = 'Время', yaxis2_title_text = 'Жест', yaxis2_range= [-1 , 5],
+    fig.update_layout(width=600, height=600, legend_title_text ='Sensor id',
+                        xaxis_title_text  = 'Period',  yaxis_title_text = 'Sensor signal', #yaxis_range=[1500, 1700], 
+                        xaxis2_title_text = 'Period', yaxis2_title_text = 'Gesture', yaxis2_range= [-1 , 5],
                         yaxis2 = dict(
                                     tickmode='array', #change 1
                                     tickvals = np.arange(5), #change 2
@@ -338,10 +348,10 @@ def get_signal_derivative_and_normalized_plot(Pilot_id:int, timesteps:list, sens
     fig = make_subplots(
         rows=2, cols=2, 
         subplot_titles=(
-            f'Производная сигналов датчиков', f'Производная нормализованных сигналов датчиков', 
-            f'Квадрат производной сигналов датчиков', f'Квадрат производной нормализованных сигналов датчиков'
+            f'Derivative of the signal', f'Derivative of normalized signal', 
+            f'Squared of signal derivative', f'Squared of normalized signal derivative'
         ), vertical_spacing = 0.1,
-    )
+    ) 
 
     df_3 = pd.DataFrame(df_1.diff(), index = range(df_1.index[0], df_1.index[-1]+1))
 
@@ -364,14 +374,14 @@ def get_signal_derivative_and_normalized_plot(Pilot_id:int, timesteps:list, sens
     for i in df_6.columns: 
         fig.add_trace(go.Scatter(x=df_1.index, y=df_6[i], name=str(df_6[i].name)), row=2, col=2)
 
-    fig.update_layout(title={'text':f'Рис. {plot_counter} - Преобразование сигнала датчиков {sensors} пилота {Pilot_id}', 'x':0.5, 'y':0.01}
+    fig.update_layout(title={'text':f'Fig. {plot_counter} - Sensor #{sensors} ignal processing of the pilot #{Pilot_id}', 'x':0.5, 'y':0.01} #Преобразование сигнала датчиков..  пилота..
     )
 
     fig.update_layout(width=1200, height=800, legend_title_text =f'Номер датчика ',
-                        xaxis_title_text  = 'Время',  yaxis_title_text = 'Сигнал датчика', #yaxis_range=[0, 4000], 
-                        xaxis2_title_text = 'Время', yaxis2_title_text = 'Нормализованный сигнал датчика', #yaxis2_range= [0 , 8],
-                        xaxis3_title_text = 'Время', yaxis3_title_text = 'Сигнал датчика', #yaxis3_range= [-1 , 8],
-                        xaxis4_title_text = 'Время', yaxis4_title_text = 'Нормализованный сигнал датчика', #yaxis2_range= [0 , 8],
+                        xaxis_title_text  = 'Period',  yaxis_title_text = 'Sensor signal', #yaxis_range=[0, 4000], #Сигнал датчика
+                        xaxis2_title_text = 'Period', yaxis2_title_text = 'Signal normalized', #yaxis2_range= [0 , 8], #Нормализованный сигнал датчика
+                        xaxis3_title_text = 'Period', yaxis3_title_text = 'Sensor signal', #yaxis3_range= [-1 , 8],
+                        xaxis4_title_text = 'Period', yaxis4_title_text = 'Signal normalized', #yaxis2_range= [0 , 8],
                         margin=dict(l=40, r=60, t=30, b=80), 
                         showlegend=False # легенда загромождает картинку
     )
@@ -418,7 +428,7 @@ def get_display_data(mounts:dict, plot_counter:int):
         plt.tight_layout()
     
     #plt.show() #- не вызывать для корретного логгирования
-    fig.suptitle(f"Рис. {plot_counter} - Сигналы датчиков и классы жестов", y=-0.1, fontsize=12);    
+    fig.suptitle(f"Fig.{plot_counter} - Sensor signals and gestures classes", y=-0.1, fontsize=12); # Сигналы датчиков и классы жестов
     
     plt.savefig(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png')
     
