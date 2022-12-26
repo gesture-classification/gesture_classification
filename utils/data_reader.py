@@ -6,7 +6,11 @@ if not sys.warnoptions:
 
 
 class DataReader():
-    
+    """Чтение данных
+    Аргумент:
+    ----------
+    path_to_data (_str_) - путь до данных из конфига
+    """    
     def __init__(self, path_to_data):
         super(DataReader, self).__init__()
         self.data = None
