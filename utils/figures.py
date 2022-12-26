@@ -374,7 +374,7 @@ def get_signal_derivative_and_normalized_plot(Pilot_id:int, timesteps:list, sens
     for i in df_6.columns: 
         fig.add_trace(go.Scatter(x=df_1.index, y=df_6[i], name=str(df_6[i].name)), row=2, col=2)
 
-    fig.update_layout(title={'text':f'Fig. {plot_counter} - Sensor #{sensors} ignal processing of the pilot #{Pilot_id}', 'x':0.5, 'y':0.01} #Преобразование сигнала датчиков..  пилота..
+    fig.update_layout(title={'text':f'Fig. {plot_counter} - Sensor #{sensors} signal processing of the pilot #{Pilot_id}', 'x':0.5, 'y':0.01} #Преобразование сигнала датчиков..  пилота..
     )
 
     fig.update_layout(width=1200, height=800, legend_title_text =f'Номер датчика ',
