@@ -1,8 +1,8 @@
 {
   "//": "путь к папке с данными",
   "PATH" : "../data/", 
-  "PATH_FOR_MODEL" : "../models/", 
-  "PATH_TEMP_MODEL" : "../models/temp_best_model",
+  "PATH_FOR_MODEL" : "../models/saved_models", 
+  "PATH_TEMP_MODEL" : "../models/weights_best_model",
   "//":"/gesture_classification/data/",
 
   "path_to_x_trn" : "data/X_train_2.npy",
