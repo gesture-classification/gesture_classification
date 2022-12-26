@@ -7,11 +7,11 @@ from keras.layers import Layer
 from keras.models import Model
 
 # Импорт параметров
-from utils.functions import config_reader, callbacks, f1
+from utils.functions import config_reader
 
-config = config_reader() #'../config/data_config.json'
+config = config_reader()
 
-class SimpleRNN(Model):  
+class SimpleRNN_model(Model):  
     """Класс создаёт модель SimpleRNN, наследуя класс от tf.keras.
     Параметры:
     ----------
@@ -20,14 +20,14 @@ class SimpleRNN(Model):
     output_units - 
     units - размерность модели из конфига 
     """    
-    def __init__(self, X_train_nn, y_train_nn, units=config['simpleRNN_units']):
+    def __init__(self, X_train_nn, y_train_nn):
 
-        super(SimpleRNN, self).__init__()
+        super(SimpleRNN_model, self).__init__()
         #------- параметры ------------
-        self.n_timesteps = None #X_train_nn.shape[1]
+        self.n_timesteps = None
         self.n_channels = X_train_nn.shape[2]
         self.output_units = y_train_nn.shape[-1]
-        self.units = units
+        self.units = config['simpleRNN_units']
                 
         #-------- слои модели ----------------
         self.input_layer = x = tf.keras.layers.Input(shape=(self.n_timesteps, self.n_channels))
@@ -40,7 +40,7 @@ class SimpleRNN(Model):
         
         
     def build_model(self):
-        """Метод формирования модели
+        """Метод формирования модели. 
         """
         model = tf.keras.Model(
             inputs=self.input_layer,
@@ -52,18 +52,18 @@ class SimpleRNN(Model):
           
 
 
-class LSTM(Model):
+class LSTM_model(Model):
     """Класс создаёт модель LSTM, наследуя класс от tf.keras.
     Параметры:
     ----------
     n_timesteps (_int_) - кол-во временных периодов
     n_channels (_int_) - кол-во датчиков
-    output_units - 
-    lstm_units - размерность модели
+    output_units - конечный слой модели
+    lstm_units - размерность модели из конфига
     """
     def __init__(self, X_train_nn, x_trn_pred_dict):
         
-        super(LSTM, self).__init__()
+        super(LSTM_model, self).__init__()
         #------- параметры ------------
         self.n_timesteps = X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
@@ -87,15 +87,15 @@ class LSTM(Model):
 
         
 
-    def build_model_LSTM(self):
+    def build_model(self):
         """Метод формирования модели
         """
-        model_lstm = tf.keras.Model(
+        model = tf.keras.Model(
             inputs=self.input_channels,
             outputs=self.output_channels,
             name="model_LSTM"
         )        
-        model_lstm.summary()
+        model.summary()
         
-        return model_lstm
+        return model
     
