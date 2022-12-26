@@ -9,12 +9,12 @@ class DataLoader():
     """Программа загрузки X_train и y_train для подачи в модель.
     Аргументы:
     -------------
-    config - 
-    X_train - 
-    y_train - 
-    path_X_train - 
-    path_y_train - 
-    id_pilot - 
+    config (_dict_) - словарь с конфигурацией
+    X_train (_pd.DataFrame_)- обучающая выборка
+    y_train (_pd.DataFrame_)- сигналы манипулятора
+    path_X_train (_str_) - ключ словаря mounts для загрузки X_train
+    path_y_train (_str_) - ключ словаря mounts для загрузки  y_train
+    id_pilot (_int_)- номер пилота
     """    
     def __init__(self, id_pilot, config):
         super(DataLoader, self).__init__()
@@ -29,7 +29,17 @@ class DataLoader():
         
 
     def create_train_nn(self, X_train, y_train, config):
-    
+        """Объединение в список всех наблюдений пилота с помощью библиотеки mne
+
+        Args:
+        -------
+            X_train (_pd.DataFrame_)- обучающая выборка
+            y_train (_pd.DataFrame_)- сигналы манипулятора
+            config (_dict_) - словарь с конфигурацией
+
+        Returns:
+            X_train_nn, y_train_nn (_numpy.ndarray_)- массивы тренировочных данных
+        """
         raw = mne.io.RawArray(
             data=X_train.T,
             info=mne.create_info(
