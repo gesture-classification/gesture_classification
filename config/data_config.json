@@ -14,10 +14,6 @@
   "tmin" : -1,
   "tmax" : 2.5,
 
-  "//": "Данные доступа к comet_ml",
-  "api_key":"Dk0hzeojblgFu6UZVzbJY0Fqq",
-  "project_name" : "gesture-classification",
-  "workspace" : "alex1iv",
 
   "//": "количество основных жестов (кроме 'битых' данных)",
   "GEST" : 5,
