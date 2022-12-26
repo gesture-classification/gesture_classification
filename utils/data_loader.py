@@ -9,7 +9,16 @@ from tensorflow import keras
 
 
 class DataLoader():
-    
+    """Программа загрузки X_train и y_train для подачи в модель.
+    Аргументы:
+    -------------
+    config - 
+    X_train - 
+    y_train - 
+    path_X_train - 
+    path_y_train - 
+    id_pilot - 
+    """    
     def __init__(self, id_pilot, config):
         super(DataLoader, self).__init__()
         self.config = config
