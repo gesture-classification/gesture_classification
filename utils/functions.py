@@ -83,7 +83,7 @@ def callbacks(
     lr=config['lr'],
     reduce_patience=config['reduce_patience'], 
     stop_patience=config["stop_patience"], 
-    PATH_BEST_MODEL=config["PATH_BEST_MODEL"]   
+    PATH_BEST_MODEL=config["PATH_TEMP_MODEL"]   
     ):
     """Описание функции
 
