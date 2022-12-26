@@ -11,7 +11,7 @@ from utils.functions import config_reader
 
 config = config_reader()
 
-class SimpleRNN_model(Model):  
+class SimpleRNN_Model(Model):  
     """Класс создаёт модель SimpleRNN, наследуя класс от tf.keras.
     Параметры:
     ----------
@@ -22,7 +22,7 @@ class SimpleRNN_model(Model):
     """    
     def __init__(self, X_train_nn, y_train_nn):
 
-        super(SimpleRNN_model, self).__init__()
+        super(SimpleRNN_Model, self).__init__()
         #------- параметры ------------
         self.n_timesteps = None
         self.n_channels = X_train_nn.shape[2]
@@ -52,7 +52,7 @@ class SimpleRNN_model(Model):
           
 
 
-class LSTM_model(Model):
+class LSTM_Model(Model):
     """Класс создаёт модель LSTM, наследуя класс от tf.keras.
     Параметры:
     ----------
@@ -63,7 +63,7 @@ class LSTM_model(Model):
     """
     def __init__(self, X_train_nn, x_trn_pred_dict):
         
-        super(LSTM_model, self).__init__()
+        super(LSTM_Model, self).__init__()
         #------- параметры ------------
         self.n_timesteps = X_train_nn.shape[1]
         self.n_channels = X_train_nn.shape[2]
