@@ -11,18 +11,17 @@ class MakeInference():
     """    
     def __init__(self):
         super(MakeInference, self).__init__()
-        
-        # импорт конфига и пути к весам моделей
-        self.config = config_reader()
-        self.path_to_models_weights = self.config.path_to_models_weights
 
-    def create_prediction(self, X_test_dataset, path_to_models_weights):
+    def create_prediction(self, X_test_dataset, config, id_pilot):
+        
         """ Функция создания и сохранения предсказания в файл
 
         Args:
             X_test_dataset (_pd.DataFrame_): массив тестовых данных для проверки качества предсказания
             path_to_models_weights (_str_): путь до весов моделей
         """
+
+        path_to_models_weights = config.PATH_FOR_MODEL[3:] + 'model_lstm_' + str(id_pilot)
         m_lstm = keras.models.load_model(path_to_models_weights, compile=False)
         m_lstm.compile(loss="mean_squared_error", metrics=[f1], optimizer=keras.optimizers.Adam())
 
