@@ -1,8 +1,8 @@
 {
   "//": "путь к папке с данными",
   "PATH" : "../data/", 
-  "PATH_FOR_MODEL" : "../models/saved_models", 
-  "PATH_TEMP_MODEL" : "../models/weights_best_model",
+  "PATH_FOR_MODEL" : "../models/saved_models/", 
+  "PATH_TEMP_MODEL" : "../models/weights_best_model/",
 
   "//": "Параметры для подготовки данных в mne",
   "points" : 1000.0,
