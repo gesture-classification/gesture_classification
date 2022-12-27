@@ -61,7 +61,7 @@ class LSTM_Model(Model):
         
         super(LSTM_Model, self).__init__()
         #------- параметры ------------
-        self.n_timesteps = X_train_nn.shape[1]
+        self.n_timesteps = None
         self.n_channels = X_train_nn.shape[2]
         self.output_units = np.mean(x_trn_pred_dict[3], axis=0).shape[-1]  # среднее предсказание от 3-х моделей SRNN
         self.lstm_units = config['lstm_units']
