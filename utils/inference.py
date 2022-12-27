@@ -21,7 +21,7 @@ class MakeInference():
             path_to_models_weights (_str_): путь до весов моделей
         """
 
-        path_to_models_weights = config.PATH_FOR_MODEL[3:] + 'model_lstm_' + str(id_pilot)
+        path_to_models_weights = config.PATH_FOR_MODEL[3:] + 'model_lstm_' + str(id_pilot) + '.h5'
         m_lstm = keras.models.load_model(path_to_models_weights, compile=False)
         m_lstm.compile(loss="mean_squared_error", metrics=[f1], optimizer=keras.optimizers.Adam())
 
