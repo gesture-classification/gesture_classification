@@ -71,8 +71,8 @@ def get_sensor_list(Pilot_id:int, mounts:dict, level_boundary:int, print_active=
             passive_sensors.append(i)
 
     if print_active is True:
-        print(f"Active sensors of pilot " + str(Pilot_id) + ": ", active_sensors)
-        print(f"Passive sensors of pilot " + str(Pilot_id) + ": ", passive_sensors) 
+        print(f"Active sensors of pilot {Pilot_id} : {active_sensors}")
+        print(f"Passive sensors of pilot {Pilot_id} : {passive_sensors}") 
     
     return active_sensors, passive_sensors 
 

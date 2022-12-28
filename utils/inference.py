@@ -3,7 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import csv
 import numpy as np
 from tensorflow import keras
-from utils.functions import f1, config_reader
+from utils.functions import f1
 
 
 class MakeInference():
