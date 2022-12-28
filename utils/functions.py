@@ -79,10 +79,9 @@ def f1(y_true, y_pred):
  # checkpoint - сохранение лучшей модели
 
 def callbacks(
-    num_train, reduce_patience, stop_patience, PATH_BEST_MODEL,
-    monitor, verbose, mode, save_best_only,                              #  checkpoint
-    restore_best_weights,   # earlystop 
-    factor, min_lr # reduce_lr
+    num_train, PATH_BEST_MODEL, monitor, verbose, mode, save_best_only, #  checkpoint
+    stop_patience, restore_best_weights,  # earlystop 
+    factor, min_lr, reduce_patience,      # reduce_lr
     ):
     """Описание функции
 
