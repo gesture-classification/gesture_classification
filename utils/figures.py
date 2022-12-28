@@ -24,14 +24,6 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
 
-# Загрузка констант из файла конфигурации
-from utils.functions import config_reader
-config = config_reader() 
- 
-
-# Словарь c названиями файлов в архиве для агрегации данных 
-mounts = config['mounts']
-
 def get_dataframe(Pilot_id:int, mounts:dict, data:np.array='X_train')-> pd.DataFrame: 
     """ Функция создания датафрейма из данных словаря
     Аргументы:
@@ -54,13 +46,14 @@ def get_dataframe(Pilot_id:int, mounts:dict, data:np.array='X_train')-> pd.DataF
     
     return df
 
-def get_sensor_list(Pilot_id:int, mounts:dict, print_active=False):
+def get_sensor_list(Pilot_id:int, mounts:dict, level_boundary:int, print_active=False):
     """ Функция печати и импорта в память всех номеров датчиков.
     
     ---Аргументы функции:-----
-    Pilot_id - номер пилота,
-    mounts - словарь с данными,
-    print_active - печать активных жестов. 
+    Pilot_id (int) - номер пилота,
+    mounts (dict) - словарь с данными,
+    level_boundary (int) - величина сигнала, определяющая разделения датчиков на активные и пассивные
+    print_active (True/False)- печать активных жестов. 
     """
     
     df = get_dataframe(Pilot_id, mounts=mounts).T
@@ -70,7 +63,7 @@ def get_sensor_list(Pilot_id:int, mounts:dict, print_active=False):
       
     for i in range(df.shape[0]):
         # если средняя амплитуда превышает 200, то добавляем индекс в список 'active_sensors' (надежных датчиков). 
-        if df.iloc[i].mean() > config['level_boundary']:
+        if df.iloc[i].mean() > level_boundary:
             active_sensors.append(i)
         
         #Остальные датчики с малой амплитудой - в список ненадёжных.      
@@ -140,7 +133,7 @@ def get_all_sensors_plot(Pilot_id, timesteps:list, mounts:dict, plot_counter=1):
     fig.write_image(f'/gesture_classification/logs_and_figures/fig_{plot_counter}.png') #, engine="kaleido"
 
 
-def get_active_passive_sensors_plot(Pilot_id:int, timesteps:list, mounts:dict, plot_counter=1):
+def get_active_passive_sensors_plot(Pilot_id:int, timesteps:list, mounts:dict, level_boundary:int, plot_counter=1):
     """    Функция построения графика показаний активных и пассивных датчиков. Аргументы функции:
     Pilot_id - номер пилота;
     timesteps - лист из двух временных периодов;
@@ -149,11 +142,10 @@ def get_active_passive_sensors_plot(Pilot_id:int, timesteps:list, mounts:dict, p
     """
       
     # списки сенсоров
-    active_sensors, passive_sensors = get_sensor_list(Pilot_id=Pilot_id, mounts=mounts)
+    active_sensors, passive_sensors = get_sensor_list(level_boundary=level_boundary, Pilot_id=Pilot_id, mounts=mounts)
 
     df = get_dataframe(Pilot_id, mounts=mounts).iloc[timesteps[0]:timesteps[1],:]
     
-        
     df_1 = pd.DataFrame(df[active_sensors], columns=active_sensors)
     df_2 = pd.DataFrame(df[passive_sensors], columns=passive_sensors)
 
@@ -199,7 +191,7 @@ def plot_history(history, plot_counter:int):
     epochs = range(len(f1_sc))
 
     # визуализация систем координат
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(11, 3.5))
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(11, 4))
 
     ax[0].plot(epochs, loss, 'b', label='Training loss')
     ax[0].plot(epochs, val_loss, 'r', label='Validation loss')
