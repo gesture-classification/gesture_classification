@@ -14,7 +14,7 @@ if not sys.warnoptions:
     
 
 
-def config_reader(path_to_json_conf:str='../config/data_config.json')->dict:
+def config_reader(path_to_json_conf:str)->dict:
     """Функция загрузки параметров конфигурации в память.
 
     Args:
@@ -33,7 +33,7 @@ def config_reader(path_to_json_conf:str='../config/data_config.json')->dict:
     return config
 
 # Задаём переменную, которой присвоим словарь с переменными конфигурации
-config = config_reader() #'../config/data_config.json'
+#config = config_reader() 
 
 def f1(y_true, y_pred):
     """Функция для расчета метрики f1_score, Precision, Recall
@@ -79,11 +79,10 @@ def f1(y_true, y_pred):
  # checkpoint - сохранение лучшей модели
 
 def callbacks(
-    num_train,
-    lr=config['lr'],
-    reduce_patience=config['reduce_patience'], 
-    stop_patience=config["stop_patience"], 
-    PATH_BEST_MODEL=config["PATH_TEMP_MODEL"]   
+    num_train, reduce_patience, stop_patience, PATH_BEST_MODEL,
+    monitor, verbose, mode, save_best_only,                              #  checkpoint
+    restore_best_weights,   # earlystop 
+    factor, min_lr # reduce_lr
     ):
     """Описание функции
 
@@ -100,32 +99,32 @@ def callbacks(
           
     checkpoint = ModelCheckpoint(
         os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
-        monitor=config["ModelCheckpoint"]["monitor"], 
-        verbose=config["ModelCheckpoint"]["verbose"], 
-        mode=config["ModelCheckpoint"]["mode"], 
-        save_best_only=config["ModelCheckpoint"]["save_best_only"]
+        monitor=monitor, 
+        verbose=verbose, 
+        mode=mode, 
+        save_best_only=save_best_only
     )
 
     earlystop = EarlyStopping(
-        monitor=config["EarlyStopping"]["monitor"], 
-        mode=config["EarlyStopping"]["mode"], 
+        monitor=monitor, 
+        mode=mode, 
         patience=stop_patience, 
-        restore_best_weights=config["EarlyStopping"]["restore_best_weights"]
+        restore_best_weights=restore_best_weights
     )
 
     reduce_lr = ReduceLROnPlateau(
-        monitor=config["ReduceLROnPlateau"]["monitor"], 
-        mode=config["ReduceLROnPlateau"]["mode"],  
-        factor=config["ReduceLROnPlateau"]["factor"], 
+        monitor=monitor, 
+        mode=mode,  
+        factor=factor, 
         patience=reduce_patience, # можно 10
-        verbose=config["ReduceLROnPlateau"]["verbose"], 
-        min_lr=lr/config["ReduceLROnPlateau"]["min_lr_coeff"]
+        verbose=verbose, 
+        min_lr=min_lr
     )
     
     return [checkpoint, earlystop, reduce_lr]
 
 
-def reset_random_seeds(seed_value=config['seed_value']):
+def reset_random_seeds(seed_value):
     """Функция задания seed
     """
     os.environ['PYTHONHASHSEED'] = str(seed_value)
