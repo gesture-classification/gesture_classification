@@ -28,6 +28,7 @@
     "bad data"  
   ],
 
+  "//": "Set seed value",
   "seed_value" : 0,
   
 
@@ -58,12 +59,15 @@
   "reduce_patience":15,
   "stop_patience":200,
   "PATH_BEST_MODEL": "/gesture_classification/models/",
+  
+  
   "ModelCheckpoint" : {
     "monitor":"val_f1",
     "verbose":1,
     "mode":"max",
     "save_best_only": true
   },
+
   "EarlyStopping" : {
     "monitor": "val_f1",
     "mode":"max", 
@@ -73,9 +77,9 @@
   "ReduceLROnPlateau" : {
     "monitor": "val_f1", 
     "mode": "max", 
+    "verbose":1,
     "factor": 0.9,
     "patience": "reduce_patience", 
-    "verbose":1,
     "min_lr_coeff":10000
   },
 
