@@ -1,6 +1,11 @@
 {
-  "//": "путь к папке с данными",
+  "//": "путь к папке с данными для ноутбуков",
   "PATH" : "../data/", 
+
+  "//": "путь к папке с данными для приложений python",
+  "PATH_PY" : "data/", 
+
+  "//": "пути к папкам с моделями",
   "PATH_FOR_MODEL" : "../models/saved_models/", 
   "PATH_TEMP_MODEL" : "../models/weights_best_model/",
 

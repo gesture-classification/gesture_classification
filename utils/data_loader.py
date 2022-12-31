@@ -16,13 +16,20 @@ class DataLoader():
     path_y_train (_str_) - ключ словаря mounts для загрузки  y_train
     id_pilot (_int_)- номер пилота
     """    
-    def __init__(self, id_pilot, config):
+    def __init__(self, id_pilot, config, is_notebook_train=True):
         super(DataLoader, self).__init__()
         self.config = config
-        self.X_train = DataReader(
-            self.config['PATH'] + self.config['mounts'][str(id_pilot)]['path_X_train']).data
-        self.y_train = DataReader(
-            self.config['PATH'] + self.config['mounts'][str(id_pilot)]['path_y_train']).data
+        if is_notebook_train:
+            self.X_train = DataReader(
+                self.config['PATH'] + self.config['mounts'][str(id_pilot)]['path_X_train']).data
+            self.y_train = DataReader(
+                self.config['PATH'] + self.config['mounts'][str(id_pilot)]['path_y_train']).data
+        else:
+            self.X_train = DataReader(
+                self.config['PATH_PY'] + self.config['mounts'][str(id_pilot)]['path_X_train']).data
+            self.y_train = DataReader(
+                self.config['PATH_PY'] + self.config['mounts'][str(id_pilot)]['path_y_train']).data
+
         self.train_nn = self.create_train_nn(self.X_train, self.y_train, self.config)
         self.X_train_nn = self.train_nn[0]
         self.y_train_nn = self.train_nn[1]

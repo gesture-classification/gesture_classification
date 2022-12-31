@@ -6,14 +6,14 @@ import numpy as np
 import os
 
 # графические библиотеки
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 
 # Зафиксируем PYTHONHASHSEED для воспроиизводимости результатов обучения модели
 seed_value = 0
 os.environ['PYTHONHASHSEED'] = str(seed_value)
 
 # Логгирование процесса
-from comet_ml import Experiment
+#from comet_ml import Experiment
 
 # библиотеки машинного обучения
 import tensorflow as tf
@@ -29,11 +29,11 @@ if not sys.warnoptions:
 from IPython.display import clear_output
 
 # Библиотека вызова функций, специально разработанных для данного ноутбука
-sys.path.insert(1, '../')
-from utils.functions import config_reader, f1, callbacks, reset_random_seeds
+sys.path.insert(1, './')
+from utils.functions import f1, callbacks, reset_random_seeds
 from utils.data_reader import DataReader
 from utils.data_loader import DataLoader
-from utils import figures
+#from utils import figures
 
 # Импортируем модели
 from models.models import SimpleRNN_Model, LSTM_Model
@@ -46,21 +46,20 @@ class OneLearning():
         super(OneLearning, self).__init__()
         self.config = config
 
-    def save_model(self, id_pilot):
-        
+    def save_lstm_model(self, id_pilot):
         ### Params initializations
         config=self.config
 
         # Все исходные файлы размещены в папке data
-        PATH = config.PATH
+        PATH = config.PATH_PY
         
         # Папка для сохранения весов лучшей модели при обучении (см. ModelCheckpoint)
-        PATH_TEMP_MODEL = config.PATH_TEMP_MODEL
+        PATH_TEMP_MODEL = config.PATH_TEMP_MODEL[3:]
         if not os.path.exists(PATH_TEMP_MODEL):
             os.mkdir(PATH_TEMP_MODEL)
 
         # Папка для сохранения обученных моделей для последующего предсказания
-        PATH_FOR_MODEL = config.PATH_FOR_MODEL
+        PATH_FOR_MODEL = config.PATH_FOR_MODEL[3:]
         if not os.path.exists(PATH_FOR_MODEL):
             os.mkdir(PATH_FOR_MODEL)
 
@@ -89,11 +88,11 @@ class OneLearning():
         i = int(i)
 
         # Загружаем данные в словарь с помощью DataLoader
-        data_for_nn = DataLoader(i, config)
+        data_for_nn = DataLoader(i, config, is_notebook_train=False)
         mounts[i]['X_train_nn'] = data_for_nn.X_train_nn
         mounts[i]['y_train_nn'] = data_for_nn.y_train_nn
         mounts[i]['X_test_dataset'] = DataReader(
-            os.path.join(config.PATH, config.mounts[str(i)].path_X_test_dataset)).data
+            os.path.join(config.PATH_PY, config.mounts[str(i)].path_X_test_dataset)).data
         print('Read Data Done!', sep='\n\n')
 
 
@@ -104,7 +103,7 @@ class OneLearning():
         # Создаем пустой лист для накопления данных с последующей корректировкой y_train
         mounts[i]['y_trn_nn_ch_list'] = []
 
-        for splt_coef in range(10, 100, units=config.simpleRNN_units): 
+        for splt_coef in range(10, 100, config.simpleRNN_delta_coef_splt): 
             # кол-во разных тренировок зависит от числа разбиений.
             
             val_splt_coef = splt_coef/100
