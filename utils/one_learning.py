@@ -1,0 +1,205 @@
+# Установка версий программных пакетов в терминале
+# pip install -qr ../requirements.txt
+
+# Импортируем библиотеки
+import numpy as np
+import os
+
+# графические библиотеки
+from matplotlib import pyplot as plt
+
+# Зафиксируем PYTHONHASHSEED для воспроиизводимости результатов обучения модели
+seed_value = 0
+os.environ['PYTHONHASHSEED'] = str(seed_value)
+
+# Логгирование процесса
+from comet_ml import Experiment
+
+# библиотеки машинного обучения
+import tensorflow as tf
+import random
+
+# библиотека взаимодействия с интерпретатором
+import sys
+if not sys.warnoptions:
+    import warnings
+    warnings.simplefilter("ignore")
+
+# Скрытие хода обучения модели,который загромождает ноутбук
+from IPython.display import clear_output
+
+# Библиотека вызова функций, специально разработанных для данного ноутбука
+sys.path.insert(1, '../')
+from utils.functions import config_reader, f1, callbacks, reset_random_seeds
+from utils.data_reader import DataReader
+from utils.data_loader import DataLoader
+from utils import figures
+
+# Импортируем модели
+from models.models import SimpleRNN_Model, LSTM_Model
+
+class OneLearning():
+    """
+    Обучение модели для одного пилота
+    """
+    def __init__(self, config):
+        super(OneLearning, self).__init__()
+        self.config = config
+
+    def save_model(self, id_pilot):
+        
+        ### Params initializations
+        config=self.config
+
+        # Все исходные файлы размещены в папке data
+        PATH = config.PATH
+        
+        # Папка для сохранения весов лучшей модели при обучении (см. ModelCheckpoint)
+        PATH_TEMP_MODEL = config.PATH_TEMP_MODEL
+        if not os.path.exists(PATH_TEMP_MODEL):
+            os.mkdir(PATH_TEMP_MODEL)
+
+        # Папка для сохранения обученных моделей для последующего предсказания
+        PATH_FOR_MODEL = config.PATH_FOR_MODEL
+        if not os.path.exists(PATH_FOR_MODEL):
+            os.mkdir(PATH_FOR_MODEL)
+
+        # Установим начальное значение для генератора случайных чисел в Python
+        random.seed(seed_value)
+        # Установим начальное значение для генератора случайных чисел в Numpy
+        np.random.seed(seed_value)
+        # Установим начальное значение для генератора случайных чисел в tensorflow 
+        tf.random.set_seed(seed_value)
+        # Конфигурация Tenzorflow
+        session_conf = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=1, 
+                                                inter_op_parallelism_threads=1)
+        sess = tf.compat.v1.Session(graph=tf.compat.v1.get_default_graph(), 
+                                    config=session_conf)
+        tf.compat.v1.keras.backend.set_session(sess)
+
+        # Словарь для последующей агрегации данных. Изначально прописаны названия файлов в архиве
+        mounts = config.mounts.toDict()
+        print('Imports Done!', sep='\n\n')
+
+
+        ### Read Data
+        #i = input('Enter pilot number, ex: 1, 2, 3, etc.')
+        i = str(id_pilot)
+        mounts[int(i)] = mounts.pop(i)
+        i = int(i)
+
+        # Загружаем данные в словарь с помощью DataLoader
+        data_for_nn = DataLoader(i, config)
+        mounts[i]['X_train_nn'] = data_for_nn.X_train_nn
+        mounts[i]['y_train_nn'] = data_for_nn.y_train_nn
+        mounts[i]['X_test_dataset'] = DataReader(
+            os.path.join(config.PATH, config.mounts[str(i)].path_X_test_dataset)).data
+        print('Read Data Done!', sep='\n\n')
+
+
+        ### Load and train SimpleRNN
+        X_train_nn = mounts[i]['X_train_nn']
+        y_train_nn = mounts[i]['y_train_nn']
+
+        # Создаем пустой лист для накопления данных с последующей корректировкой y_train
+        mounts[i]['y_trn_nn_ch_list'] = []
+
+        for splt_coef in range(10, 100, units=config.simpleRNN_units): 
+            # кол-во разных тренировок зависит от числа разбиений.
+            
+            val_splt_coef = splt_coef/100
+
+            tf.keras.backend.clear_session()
+            reset_random_seeds(seed_value) # сброс и задание random seed
+
+            model = SimpleRNN_Model(X_train_nn, y_train_nn, 
+                                    units=config.simpleRNN_units).build_model()
+            
+            model = tf.keras.models.clone_model(model)
+            
+            model.compile(
+                loss="mean_squared_error", 
+                metrics=[f1], 
+                optimizer='Adam', # по умолчанию learning rate=10e-3
+            )
+
+            history = model.fit(
+                X_train_nn, 
+                y_train_nn, 
+                validation_split=val_splt_coef, 
+                callbacks=callbacks(
+                    reduce_patience=config.reduce_patience, 
+                    stop_patience=config.stop_patience, 
+                    num_train=i,
+                    PATH_BEST_MODEL=config.PATH_TEMP_MODEL,
+                    monitor=config.ModelCheckpoint.monitor, 
+                    verbose=config.ModelCheckpoint.verbose, 
+                    mode=config.ModelCheckpoint.mode, 
+                    save_best_only=config.ModelCheckpoint.save_best_only,
+                    restore_best_weights=config.EarlyStopping.restore_best_weights,
+                    factor=config.ReduceLROnPlateau.factor, 
+                    min_lr=config.lr / config.ReduceLROnPlateau.min_lr_coeff),  
+                    # остальные параметры - смотри в functions.py
+                epochs=config.simpleRNN_epochs, #500,
+                verbose=config.simpleRNN_verbose
+            )
+            
+            y_pred_train_nn = model.predict(X_train_nn)
+            mounts[i]['y_trn_nn_ch_list'].append(y_pred_train_nn)
+
+        # создаём переменную для записи среднего значения предсказаний
+        y_pred_train_nn = np.mean(mounts[i]['y_trn_nn_ch_list'], axis=0).argmax(axis=-1)
+        # сохраняем y_pred_train_n в словарь
+        mounts[i]['y_pred_train_nn'] = tf.keras.utils.to_categorical(y_pred_train_nn)
+
+        print('Load and train SimpleRNN Done!', sep='\n\n')
+
+
+        ### Load and train LSTM
+        tf.keras.backend.clear_session()
+        reset_random_seeds(seed_value)
+        
+        y_pred_train_nn = mounts[i]['y_pred_train_nn']
+
+        model_lstm = LSTM_Model(X_train_nn, y_pred_train_nn, 
+                                lstm_units=config.lstm_units).build_model()       
+
+        model_lstm.compile(
+            loss="categorical_crossentropy", 
+            metrics=[f1], 
+            optimizer='Adam', # по умолчанию learning rate=10e-3
+        )
+
+        # m_lstm = tf.keras.models.clone_model(model_lstm)
+
+        history_lstm = model_lstm.fit(
+            X_train_nn,
+            y_pred_train_nn,
+            validation_split=config.lstm_val_splt,
+            epochs=config.lstm_epochs,      
+            verbose=config.lstm_verbose,
+            callbacks=callbacks(
+                    reduce_patience=config.reduce_patience, 
+                    stop_patience=config.stop_patience, 
+                    PATH_BEST_MODEL=config.PATH_TEMP_MODEL,
+                    monitor=config.ModelCheckpoint.monitor, 
+                    verbose=config.ModelCheckpoint.verbose, 
+                    mode=config.ModelCheckpoint.mode, 
+                    save_best_only=config.ModelCheckpoint.save_best_only,
+                    restore_best_weights=config.EarlyStopping.restore_best_weights,
+                    factor=config.ReduceLROnPlateau.factor, 
+                    min_lr=config.lr / config.ReduceLROnPlateau.min_lr_coeff,
+                    num_train=i)  # остальные параметры - смотри в functions.py
+            )
+
+        mounts[i]['history_lstm'] = history_lstm
+
+        mounts[i]['model_lstm'] = model_lstm
+
+        print('Load and train LSTM model Done!')
+
+        # сохранение обученной модели в папке по пути PATH_FOR_MODEL
+        model_lstm.save(os.path.join(PATH_FOR_MODEL, 'model_lstm_' + str(i) + '.h5'), 
+                        save_format='h5')
+
+        print('Model LSTM saved!', sep='\n\n')
