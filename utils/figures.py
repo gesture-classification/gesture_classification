@@ -78,7 +78,7 @@ def get_sensor_list(Pilot_id: int, mounts: dict, level_boundary: int, print_acti
     return active_sensors, passive_sensors 
 
 
-def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, plot_counter: int):
+def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, plot_counter: str):
     """Функция отображения показаний датчиков наблюдений для каждого пилота
 
     Args:
@@ -107,7 +107,7 @@ def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, p
         break
 
 
-def get_all_sensors_plot(Pilot_id: int, timesteps: list, mounts: dict, plot_counter=1):
+def get_all_sensors_plot(Pilot_id: int, timesteps: list, mounts: dict, plot_counter='1'):
     """
     Функция построения диаграммы показаний датчиков заданного временного периода. Аргументы функции:
     Pilot_id - номер пилота;
@@ -134,7 +134,7 @@ def get_all_sensors_plot(Pilot_id: int, timesteps: list, mounts: dict, plot_coun
     fig.write_image(f'../logs_and_figures/fig_{plot_counter}.png')  # , engine="kaleido"
 
 
-def get_active_passive_sensors_plot(Pilot_id: int, timesteps: list, mounts: dict, level_boundary: int, plot_counter=1):
+def get_active_passive_sensors_plot(Pilot_id: int, timesteps: list, mounts: dict, level_boundary: int, plot_counter='1'):
     """    Функция построения графика показаний активных и пассивных датчиков. Аргументы функции:
     Pilot_id - номер пилота;
     timesteps - лист из двух временных периодов;
@@ -177,7 +177,7 @@ def get_active_passive_sensors_plot(Pilot_id: int, timesteps: list, mounts: dict
     fig.write_image(f'../logs_and_figures/fig_{plot_counter}.png')  # , engine="kaleido"
     
 
-def plot_history(history, plot_counter: int):
+def plot_history(history, plot_counter: str):
     """Функция визуализации процесса обучения модели.
     Аргументы:
     history - история обучения модели,
@@ -214,7 +214,7 @@ def plot_history(history, plot_counter: int):
     # fig.show(); #- не вызывать для корретного логгирования
 
 
-def get_gesture_prediction_plot(Pilot_id: int, i: int, y_pred_train_nn_mean: np.ndarray, mounts: dict, plot_counter: int):
+def get_gesture_prediction_plot(Pilot_id: int, i: int, y_pred_train_nn_mean: np.ndarray, mounts: dict, plot_counter: str):
     """Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста,
     вероятности появления жеста и предсказание класса жеста.
     
@@ -264,7 +264,7 @@ def get_gesture_prediction_plot(Pilot_id: int, i: int, y_pred_train_nn_mean: np.
     plt.savefig(f'../logs_and_figures/fig_{plot_counter}.png')
 
 
-def get_signal_and_train_plots(Pilot_id: int, timesteps: list, sensors: list, mounts: dict, plot_counter=1):
+def get_signal_and_train_plots(Pilot_id: int, timesteps: list, sensors: list, mounts: dict, plot_counter='1'):
     """ Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста. 
     
     -----Агументы:-------------
@@ -316,7 +316,7 @@ def get_signal_and_train_plots(Pilot_id: int, timesteps: list, sensors: list, mo
 
 
 def get_signal_derivative_and_normalized_plot(Pilot_id: int, timesteps: list, sensors: list,
-                                              mounts: dict, plot_counter=1):
+                                              mounts: dict, plot_counter='1'):
     """Функция построения графиков: сигнал датчиков оптомиографии, изменение класса жеста,
     вероятности появления жеста и предсказание.
     
@@ -385,9 +385,9 @@ def get_signal_derivative_and_normalized_plot(Pilot_id: int, timesteps: list, se
     fig.write_image(f'../logs_and_figures/fig_{plot_counter}.png')  # , engine="kaleido"
     
     
-def get_display_data(mounts: dict, plot_counter: int):
+def get_display_data(mounts: dict, plot_counter: str):
     """Функция отображения тренировочных данных (X_train, y_train)) для всех пилотов в датасете
-    ------Агументы:---------
+    ------Аргументы:---------
     mounts (dict) - словарь, содержащий словари с данными: X_train, y_train, x_test
     plot_counter (int) - номер диаграммы
     """    
