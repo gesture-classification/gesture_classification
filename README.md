@@ -124,7 +124,7 @@ The term **inference** means gesture prediction using a fully trained machine le
 
 ### Get an inference from
 
-1. Put your initial data in format `*.npy` into the *data* folder. Each time series of user data must contain 50 features from OMG sensors with any time duration.
+1. Put your initial data in format `*.npy` or `*.pkl` into the *data* folder. Each time series of user data must contain 50 features from OMG sensors with any time duration.
 2. Assign paths to the following files to variables in the config *data_config.json*, namely:
    * `path_to_x_trn` - train data *X_train*
    * `path_to_y_trn` - test data *X_test*

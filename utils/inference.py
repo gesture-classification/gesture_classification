@@ -1,23 +1,26 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import csv
 import numpy as np
 from tensorflow import keras
+
 from utils.functions import f1
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-class MakeInference():
+
+class MakeInference:
     """Получение инференса
     """    
     def __init__(self):
-        super(MakeInference, self).__init__()
+        super().__init__()
 
-    def create_prediction(self, X_test_dataset, config, id_pilot):
-        
+    @staticmethod
+    def create_prediction(X_test_dataset, config, id_pilot):
         """ Функция создания и сохранения предсказания в файл
 
         Args:
             X_test_dataset (_pd.DataFrame_): массив тестовых данных для проверки качества предсказания
+            config (_dict_): словарь с параметрами конфигурации
             path_to_models_weights (_str_): путь до весов моделей
         """
 
@@ -38,4 +41,4 @@ class MakeInference():
             writer = csv.writer(f)
             writer.writerows(y_pred_test_lstm)
         print('X_test_dataset predicted!')
-        #return y_pred_test_lstm
+        # return y_pred_test_lstm

@@ -1,5 +1,8 @@
 # Импортируем библиотеки
-import os, sys, json, random
+import os
+import sys
+import json
+import random
 from dotmap import DotMap
 import numpy as np 
 
@@ -11,10 +14,9 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 if not sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
-    
 
 
-def config_reader(path_to_json_conf:str)->dict:
+def config_reader(path_to_json_conf: str) -> dict:
     """Функция загрузки параметров конфигурации в память.
 
     Args:
@@ -23,7 +25,7 @@ def config_reader(path_to_json_conf:str)->dict:
 
     Returns:
     ------------
-    config (dict): словарь с параметрами кинфигурации
+    config (dict): словарь с параметрами конфигурации
     """    
     with open(path_to_json_conf, 'r') as config_file:
         config_dict = json.load(config_file)
@@ -32,8 +34,6 @@ def config_reader(path_to_json_conf:str)->dict:
     
     return config
 
-# Задаём переменную, которой присвоим словарь с переменными конфигурации
-#config = config_reader() 
 
 def f1(y_true, y_pred):
     """Функция для расчета метрики f1_score, Precision, Recall
@@ -56,8 +56,8 @@ def f1(y_true, y_pred):
         see: https://stackoverflow.com/questions/66554207/calculating-micro-f-1-score-in-keras
         """
         possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-        recall = true_positives / (possible_positives + K.epsilon())
-        return recall
+        recall_res = true_positives / (possible_positives + K.epsilon())
+        return recall_res
 
     def precision(y_true, y_pred):
         """
@@ -67,21 +67,21 @@ def f1(y_true, y_pred):
         how many selected items are relevant.
         """
         predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
-        precision = true_positives/(predicted_positives + K.epsilon())
-        return precision
+        precision_res = true_positives/(predicted_positives + K.epsilon())
+        return precision_res
 
     precision = precision(y_true, y_pred)
     recall = recall(y_true, y_pred)
 
-    return 2*((precision*recall)/(precision + recall + K.epsilon()))
+    return 2 * ((precision * recall)/(precision + recall + K.epsilon()))
 
- # Функция Callbacks, используемая при обучении модели, включающая
- # checkpoint - сохранение лучшей модели
 
+# Функция Callbacks, используемая при обучении модели, включающая
+# checkpoint - сохранение лучшей модели
 def callbacks(
-    num_train, PATH_BEST_MODEL, monitor, verbose, mode, save_best_only, #  checkpoint
-    stop_patience, restore_best_weights,  # earlystop 
-    factor, min_lr, reduce_patience,      # reduce_lr
+    num_train, PATH_BEST_MODEL, monitor, verbose, mode, save_best_only,  #  for checkpoint
+    stop_patience, restore_best_weights,  # for earlystop
+    factor, min_lr, reduce_patience,      # for reduce_lr
     ):
     """Описание функции
 
@@ -93,7 +93,7 @@ def callbacks(
         PATH_BEST_MODEL (_type_, optional): _description_. Defaults to config["PATH_BEST_MODEL"].
 
     Returns:
-        _type_: _description_
+        list: _description_
     """      
           
     checkpoint = ModelCheckpoint(
@@ -115,7 +115,7 @@ def callbacks(
         monitor=monitor, 
         mode=mode,  
         factor=factor, 
-        patience=reduce_patience, # можно 10
+        patience=reduce_patience,  # можно 10
         verbose=verbose, 
         min_lr=min_lr
     )

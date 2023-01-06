@@ -3,52 +3,54 @@
 
 # Импортируем библиотеки
 import numpy as np
+import sys
 import os
-
-# графические библиотеки
-#from matplotlib import pyplot as plt
-
-# Зафиксируем PYTHONHASHSEED для воспроиизводимости результатов обучения модели
-seed_value = 0
-os.environ['PYTHONHASHSEED'] = str(seed_value)
-
-# Логгирование процесса
-#from comet_ml import Experiment
 
 # библиотеки машинного обучения
 import tensorflow as tf
 import random
 
-# библиотека взаимодействия с интерпретатором
-import sys
-if not sys.warnoptions:
-    import warnings
-    warnings.simplefilter("ignore")
+# графические библиотеки
+# from matplotlib import pyplot as plt
+
+# Логгирование процесса
+# from comet_ml import Experiment
 
 # Скрытие хода обучения модели,который загромождает ноутбук
-from IPython.display import clear_output
+# from IPython.display import clear_output
 
 # Библиотека вызова функций, специально разработанных для данного ноутбука
-sys.path.insert(1, './')
 from utils.functions import f1, callbacks, reset_random_seeds
 from utils.data_reader import DataReader
 from utils.data_loader import DataLoader
-#from utils import figures
 
 # Импортируем модели
 from models.models import SimpleRNN_Model, LSTM_Model
 
-class OneLearning():
+# Зафиксируем PYTHONHASHSEED для воспроиизводимости результатов обучения модели
+seed_value = 0
+os.environ['PYTHONHASHSEED'] = str(seed_value)
+
+# библиотека взаимодействия с интерпретатором
+if not sys.warnoptions:
+    import warnings
+    warnings.simplefilter("ignore")
+
+
+sys.path.insert(1, './')
+
+
+class OneLearning:
     """
     Обучение модели для одного пилота
     """
     def __init__(self, config):
-        super(OneLearning, self).__init__()
+        super().__init__()
         self.config = config
 
-    def save_lstm_model(self, id_pilot):
+    def save_lstm_model(self, id_pilot: int):
         ### Params initializations
-        config=self.config
+        config = self.config
 
         # Все исходные файлы размещены в папке data
         PATH = config.PATH_PY
@@ -80,9 +82,8 @@ class OneLearning():
         mounts = config.mounts.toDict()
         print('Imports Done!', sep='\n\n')
 
-
         ### Read Data
-        #i = input('Enter pilot number, ex: 1, 2, 3, etc.')
+        # i = input('Enter pilot number, ex: 1, 2, 3, etc.')
         i = str(id_pilot)
         mounts[int(i)] = mounts.pop(i)
         i = int(i)
@@ -94,7 +95,6 @@ class OneLearning():
         mounts[i]['X_test_dataset'] = DataReader(
             os.path.join(config.PATH_PY, config.mounts[str(i)].path_X_test_dataset)).data
         print('Read Data Done!', sep='\n\n')
-
 
         ### Load and train SimpleRNN
         X_train_nn = mounts[i]['X_train_nn']
@@ -109,7 +109,7 @@ class OneLearning():
             val_splt_coef = splt_coef/100
 
             tf.keras.backend.clear_session()
-            reset_random_seeds(seed_value) # сброс и задание random seed
+            reset_random_seeds(seed_value)  # сброс и задание random seed
 
             model = SimpleRNN_Model(X_train_nn, y_train_nn, 
                                     units=config.simpleRNN_units).build_model()
@@ -119,7 +119,7 @@ class OneLearning():
             model.compile(
                 loss="mean_squared_error", 
                 metrics=[f1], 
-                optimizer='Adam', # по умолчанию learning rate=10e-3
+                optimizer='Adam',  # по умолчанию learning rate=10e-3
             )
 
             history = model.fit(
@@ -139,7 +139,7 @@ class OneLearning():
                     factor=config.ReduceLROnPlateau.factor, 
                     min_lr=config.lr / config.ReduceLROnPlateau.min_lr_coeff),  
                     # остальные параметры - смотри в functions.py
-                epochs=config.simpleRNN_epochs, #500,
+                epochs=config.simpleRNN_epochs,  # 500,
                 verbose=config.simpleRNN_verbose
             )
             
@@ -153,7 +153,6 @@ class OneLearning():
 
         print('Load and train SimpleRNN Done!', sep='\n\n')
 
-
         ### Load and train LSTM
         tf.keras.backend.clear_session()
         reset_random_seeds(seed_value)
@@ -166,7 +165,7 @@ class OneLearning():
         model_lstm.compile(
             loss="categorical_crossentropy", 
             metrics=[f1], 
-            optimizer='Adam', # по умолчанию learning rate=10e-3
+            optimizer='Adam',  # по умолчанию learning rate=10e-3
         )
 
         # m_lstm = tf.keras.models.clone_model(model_lstm)
