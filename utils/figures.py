@@ -78,11 +78,11 @@ def get_sensor_list(Pilot_id: int, mounts: dict, level_boundary: int, print_acti
     return active_sensors, passive_sensors 
 
 
-def get_signals_plot(data: list[np.ndarray], mounts: dict, test_id: list, plot_counter: int):
+def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, plot_counter: int):
     """Функция отображения показаний датчиков наблюдений для каждого пилота
 
     Args:
-        data (list[np.ndarray]): список, где для каждого номера наблюдения хранится массив с данными
+        data (list[np.ndarray, ...]): список, где для каждого номера наблюдения хранится массив с данными
         mounts: словарь с данными,
         test_id (list): номер наблюдения
         plot_counter (int): номер рисунка
