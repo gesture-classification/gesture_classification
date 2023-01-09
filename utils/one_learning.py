@@ -200,4 +200,6 @@ class OneLearning:
         model_lstm.save(os.path.join(PATH_FOR_MODEL, 'model_lstm_' + str(i) + '.h5'), 
                         save_format='h5')
 
-        print('Model LSTM saved!', sep='\n\n')
+        print('Model LSTM saved!')
+        print(f"Данные сохранены в {os.path.join(PATH_FOR_MODEL, 'model_lstm_' + str(i) + '.h5')}")
+        print('__________________________________\n\n')

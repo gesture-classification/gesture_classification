@@ -41,4 +41,6 @@ class MakeInference:
             writer = csv.writer(f)
             writer.writerows(y_pred_test_lstm)
         print('X_test_dataset predicted!')
+        print('Данные сохранены в predictions.csv')
+        print('__________________________________\n\n')
         # return y_pred_test_lstm
