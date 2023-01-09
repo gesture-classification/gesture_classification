@@ -46,3 +46,6 @@ venv.bak/
 
 # Данные доступа к komet.ml
 credentials.json
+
+# Результат запуска инференса
+predictions.csv
