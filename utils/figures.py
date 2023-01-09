@@ -96,7 +96,7 @@ def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, p
     
             plt.sca(axx[n])
             plt.plot(data[i].T, lw=0.5)
-            plt.title(f'Test duration: {data[id][mount_name].T.shape[0]} periods')
+            plt.title(f'Test duration: {data[i][mount_name].T.shape[0]} periods')
         
         fig.suptitle(f"Fig.{plot_counter} - Sensor signals of pilot #{mount_name}", y=-0.1, fontsize=12)
         fig.tight_layout()
