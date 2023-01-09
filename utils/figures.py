@@ -92,10 +92,10 @@ def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, p
     
     for mount_name, mount in mounts.items():
                 
-        for n, id in enumerate(test_id):  # n-порядковый номер наблюдения; id - индекс наблюдения
+        for n, i in enumerate(test_id):  # n-порядковый номер наблюдения; i - индекс наблюдения
     
             plt.sca(axx[n])
-            plt.plot(data[id].T, lw=0.5)
+            plt.plot(data[i].T, lw=0.5)
             plt.title(f'Test duration: {data[id][mount_name].T.shape[0]} periods')
         
         fig.suptitle(f"Fig.{plot_counter} - Sensor signals of pilot #{mount_name}", y=-0.1, fontsize=12)
