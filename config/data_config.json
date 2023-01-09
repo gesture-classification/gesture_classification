@@ -58,8 +58,7 @@
   "//": "Предел разделения сигналов на активные и пассивные",
   "level_boundary":200,
 
-  "//": "Callbacks",
-  "lr":0.001,
+  "//": "Функция Callbacks",
   "reduce_patience":15,
   "stop_patience":200,
   "PATH_BEST_MODEL": "/gesture_classification/models/",
@@ -85,7 +84,7 @@
     "verbose":1,
     "factor": 0.9,
     "patience": "reduce_patience", 
-    "min_lr_coeff":10000
+    "min_lr_coeff":0.0000001
   },
 
   "//": "Модель SimpleRNN",

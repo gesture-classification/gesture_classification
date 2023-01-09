@@ -88,7 +88,7 @@ def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, p
         plot_counter (int): номер рисунка
     """    
     
-    fig, axx = plt.subplots(3, 1, sharex=True, figsize=(10, 5))
+    fig, axx = plt.subplots(len(test_id), 1, sharex=True, figsize=(10, 5))
     
     for mount_name, mount in mounts.items():
                 
@@ -98,7 +98,7 @@ def get_signals_plot(data: list[np.ndarray, ...], mounts: dict, test_id: list, p
             plt.plot(data[id].T, lw=0.5)
             plt.title(f'Test duration: {data[id][mount_name].T.shape[0]} periods')
         
-        fig.suptitle(f"Fig.{plot_counter} - Sensor signals of pilot #{mount_name}", y=-0.1, fontsize=14)
+        fig.suptitle(f"Fig.{plot_counter} - Sensor signals of pilot #{mount_name}", y=-0.1, fontsize=12)
         fig.tight_layout()
         
         plt.savefig(f'../logs_and_figures/fig_{plot_counter}.png')
@@ -389,8 +389,13 @@ def get_display_data(mounts: dict, plot_counter: str):
     """Функция отображения тренировочных данных (X_train, y_train)) для всех пилотов в датасете
     ------Аргументы:---------
     mounts (dict) - словарь, содержащий словари с данными: X_train, y_train, x_test
+    ------Агументы:---------
+    mounts (dict) - словарь, содержащий словари с ключами: 1, 2, 3. Каждому ключу соответствует словарь с ключами:
+        имена файлов: 'path_X_train', 'path_y_train', 'path_X_test_dataset',
+        данные:'X_train', 'y_train', 'X_test_dataset'
     plot_counter (int) - номер диаграммы
     """    
+
     for mount_name, mount in mounts.items():
         X_train = mount['X_train']
         y_train = mount['y_train']
