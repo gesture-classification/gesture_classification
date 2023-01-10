@@ -177,6 +177,7 @@ class OneLearning:
             epochs=config.lstm_epochs,      
             verbose=config.lstm_verbose,
             callbacks=callbacks(
+                    num_train=i
                     reduce_patience=config.reduce_patience, 
                     stop_patience=config.stop_patience, 
                     PATH_BEST_MODEL=config.PATH_TEMP_MODEL,
@@ -186,8 +187,8 @@ class OneLearning:
                     save_best_only=config.ModelCheckpoint.save_best_only,
                     restore_best_weights=config.EarlyStopping.restore_best_weights,
                     factor=config.ReduceLROnPlateau.factor, 
-                    min_lr=config.lr / config.ReduceLROnPlateau.min_lr_coeff,
-                    num_train=i)  # остальные параметры - смотри в functions.py
+                    min_lr=config.lr / config.ReduceLROnPlateau.min_lr_coeff
+                )  # остальные параметры - смотри в functions.py
             )
 
         mounts[i]['history_lstm'] = history_lstm
