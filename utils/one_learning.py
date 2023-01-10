@@ -25,7 +25,7 @@ from utils.data_reader import DataReader
 from utils.data_loader import DataLoader
 
 # Импортируем модели
-from models.models import SimpleRNN_Model, LSTM_Model
+from models.models import ModelSimpleRNN, ModelLSTM
 
 # Зафиксируем PYTHONHASHSEED для воспроиизводимости результатов обучения модели
 seed_value = 0
@@ -111,7 +111,7 @@ class OneLearning:
             tf.keras.backend.clear_session()
             reset_random_seeds(seed_value)  # сброс и задание random seed
 
-            model = SimpleRNN_Model(X_train_nn, y_train_nn, 
+            model = ModelSimpleRNN(X_train_nn, y_train_nn,
                                     units=config.simpleRNN_units).build_model()
             
             model = tf.keras.models.clone_model(model)
@@ -159,7 +159,7 @@ class OneLearning:
         
         y_pred_train_nn = mounts[i]['y_pred_train_nn']
 
-        model_lstm = LSTM_Model(X_train_nn, y_pred_train_nn, 
+        model_lstm = ModelLSTM(X_train_nn, y_pred_train_nn,
                                 lstm_units=config.lstm_units).build_model()       
 
         model_lstm.compile(
