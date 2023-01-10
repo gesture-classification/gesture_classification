@@ -8,7 +8,7 @@ from keras.models import Model
 # config = config_reader()
 
 
-class SimpleRNN_Model(Model):  
+class ModelSimpleRNN(Model):
     """Класс создаёт модель SimpleRNN, наследуя класс от tf.keras.
     Параметры:
     ----------
@@ -19,7 +19,7 @@ class SimpleRNN_Model(Model):
     """    
     def __init__(self, X_train_nn: np.ndarray, y_train_nn: np.ndarray, units: int):
 
-        super(SimpleRNN_Model, self).__init__()
+        super().__init__()
         # ------- параметры ------------
         self.n_timesteps = None
         self.n_channels = X_train_nn.shape[2]
@@ -47,7 +47,7 @@ class SimpleRNN_Model(Model):
         return model
 
 
-class LSTM_Model(Model):
+class ModelLSTM(Model):
     """Класс создаёт модель LSTM, наследуя класс от tf.keras.
     Параметры:
     ----------
@@ -58,7 +58,7 @@ class LSTM_Model(Model):
     """
     def __init__(self, X_train_nn: np.ndarray, x_trn_pred_dict: np.ndarray, lstm_units: int):
         
-        super(LSTM_Model, self).__init__()
+        super().__init__()
         # ------- параметры ------------
         self.n_timesteps = None
         self.n_channels = X_train_nn.shape[2]
