@@ -8,7 +8,7 @@ if __name__ == "__main__":
     Введите номер пилота, по которому загрузить данные X_test
     для получения predict с помощью уже обученной на данных этого пилота модели
     '''
-    id_pilot = 3
+    id_pilot = 2
     path_to_config = 'config/data_config.json'
     config = config_reader(path_to_config)
         

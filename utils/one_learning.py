@@ -36,7 +36,6 @@ if not sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
 
-
 sys.path.insert(1, './')
 
 
@@ -90,6 +89,8 @@ class OneLearning:
 
         # Загружаем данные в словарь с помощью DataLoader
         data_for_nn = DataLoader(i, config, is_notebook_train=False)
+        mounts[i]['X_train'] = data_for_nn.X_train
+        mounts[i]['y_train'] = data_for_nn.y_train
         mounts[i]['X_train_nn'] = data_for_nn.X_train_nn
         mounts[i]['y_train_nn'] = data_for_nn.y_train_nn
         mounts[i]['X_test_dataset'] = DataReader(
@@ -103,6 +104,9 @@ class OneLearning:
         # Создаем пустой лист для накопления данных с последующей корректировкой y_train
         mounts[i]['y_trn_nn_ch_list'] = []
 
+        model = ModelSimpleRNN(X_train_nn, y_train_nn,
+                               units=config.simpleRNN_units).build_model()
+
         for splt_coef in range(10, 100, config.simpleRNN_delta_coef_splt): 
             # кол-во разных тренировок зависит от числа разбиений.
             
@@ -111,9 +115,6 @@ class OneLearning:
             tf.keras.backend.clear_session()
             reset_random_seeds(seed_value)  # сброс и задание random seed
 
-            model = ModelSimpleRNN(X_train_nn, y_train_nn,
-                                    units=config.simpleRNN_units).build_model()
-            
             model = tf.keras.models.clone_model(model)
             
             model.compile(
@@ -137,7 +138,7 @@ class OneLearning:
                     save_best_only=config.ModelCheckpoint.save_best_only,
                     restore_best_weights=config.EarlyStopping.restore_best_weights,
                     factor=config.ReduceLROnPlateau.factor, 
-                    min_lr=config.lr / config.ReduceLROnPlateau.min_lr_coeff),  
+                    min_lr=config.ReduceLROnPlateau.min_lr_coeff),  
                     # остальные параметры - смотри в functions.py
                 epochs=config.simpleRNN_epochs,  # 500,
                 verbose=config.simpleRNN_verbose
@@ -153,14 +154,15 @@ class OneLearning:
 
         print('Load and train SimpleRNN Done!', sep='\n\n')
 
+
         ### Load and train LSTM
-        tf.keras.backend.clear_session()
-        reset_random_seeds(seed_value)
-        
         y_pred_train_nn = mounts[i]['y_pred_train_nn']
 
         model_lstm = ModelLSTM(X_train_nn, y_pred_train_nn,
-                                lstm_units=config.lstm_units).build_model()       
+                                lstm_units=config.lstm_units).build_model()
+
+        tf.keras.backend.clear_session()
+        reset_random_seeds(seed_value)    
 
         model_lstm.compile(
             loss="categorical_crossentropy", 
@@ -177,7 +179,7 @@ class OneLearning:
             epochs=config.lstm_epochs,      
             verbose=config.lstm_verbose,
             callbacks=callbacks(
-                    num_train=i
+                    num_train=i,
                     reduce_patience=config.reduce_patience, 
                     stop_patience=config.stop_patience, 
                     PATH_BEST_MODEL=config.PATH_TEMP_MODEL,
@@ -187,7 +189,7 @@ class OneLearning:
                     save_best_only=config.ModelCheckpoint.save_best_only,
                     restore_best_weights=config.EarlyStopping.restore_best_weights,
                     factor=config.ReduceLROnPlateau.factor, 
-                    min_lr=config.lr / config.ReduceLROnPlateau.min_lr_coeff
+                    min_lr=config.ReduceLROnPlateau.min_lr_coeff
                 )  # остальные параметры - смотри в functions.py
             )
 
