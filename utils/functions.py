@@ -37,13 +37,13 @@ def config_reader(path_to_json_conf: str) -> dict:
 
 def f1(y_true, y_pred):
     """Функция для расчета метрики f1_score, Precision, Recall
-
+    
     Args:
-        y_true (_type_): _description_
-        y_pred (_type_): _description_
+        y_true (int): исходные данные в диапазоне [0, 1]
+        y_pred (int): предсказанные данные в диапазоне [0, 1]
 
     Returns:
-        _type_: _description_
+        recall_res (np.float64): _description_
     """        
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
 
@@ -76,8 +76,7 @@ def f1(y_true, y_pred):
     return 2 * ((precision * recall)/(precision + recall + K.epsilon()))
 
 
-# Функция Callbacks, используемая при обучении модели, включающая
-# checkpoint - сохранение лучшей модели
+ 
 def callbacks(
     num_train, PATH_BEST_MODEL, monitor, verbose, mode, save_best_only,  #  for checkpoint
     stop_patience, restore_best_weights,  # for earlystop
@@ -86,16 +85,17 @@ def callbacks(
     """Описание функции
 
     Args:
-        lr (_type_): _description_
-        num_train (_type_): _description_
-        reduce_patience (_type_, optional): _description_. Defaults to config['reduce_patience'].
-        stop_patience (_type_, optional): _description_. Defaults to config["stop_patience"].
-        PATH_BEST_MODEL (_type_, optional): _description_. Defaults to config["PATH_BEST_MODEL"].
-
-    Returns:
-        list: _description_
+        min_lr (_float_): нижняя граница learning rate, по которой обучение прекращается
+        num_train (_int_): номер пилота
+        monitor (str) - значение метрики 
+        mode (str)- режим работы функции {"auto", "min", "max"}. Max - остановка обучения, когда метрика не увеличивается; 
+        reduce_patience (_int_): количество эпох, после которого learning rate снижается в случае, если метрика не улучшается.
+        stop_patience (_int_):  количество эпох, после которого обучение останавливается, если метрика не улучшается.
+        PATH_BEST_MODEL (_str_): путь сохранения лучшей модели (из конфига).
+        save_best_only (bool): Если True, то сохраняет только модели с лучшим скором.
     """      
-          
+    
+    # сохранение лучшей модели
     checkpoint = ModelCheckpoint(
         os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
         monitor=monitor, 
@@ -104,6 +104,7 @@ def callbacks(
         save_best_only=save_best_only
     )
 
+    # остановка обучения при отсутствии улучшения заданной метрики
     earlystop = EarlyStopping(
         monitor=monitor, 
         mode=mode, 
@@ -111,6 +112,7 @@ def callbacks(
         restore_best_weights=restore_best_weights
     )
 
+    # снижение learning rate при отсутствии улучшения заданной метрики 
     reduce_lr = ReduceLROnPlateau(
         monitor=monitor, 
         mode=mode,  
