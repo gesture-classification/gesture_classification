@@ -25,7 +25,7 @@ if __name__ == "__main__":
                 if id_pilot not in (1, 2, 3):
                     break
 
-            print('Подождите плз, я считаю...')
+            print('Подождите, идет расчет...')
             path_to_config = 'config/data_config.json'
             config = config_reader(path_to_config)
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
                 if id_pilot not in (1, 2, 3):
                     break
 
-            print('Подождите плз, я считаю...')
+            print('Подождите, идет расчет...')
             path_to_config = 'config/data_config.json'
             config = config_reader(path_to_config)
 

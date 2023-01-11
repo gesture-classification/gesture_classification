@@ -10,14 +10,8 @@ import os
 import tensorflow as tf
 import random
 
-# графические библиотеки
-# from matplotlib import pyplot as plt
-
 # Логгирование процесса
 # from comet_ml import Experiment
-
-# Скрытие хода обучения модели,который загромождает ноутбук
-# from IPython.display import clear_output
 
 # Библиотека вызова функций, специально разработанных для данного ноутбука
 from utils.functions import f1, callbacks, reset_random_seeds
@@ -82,7 +76,6 @@ class OneLearning:
         print('Imports Done!', sep='\n\n')
 
         ### Read Data
-        # i = input('Enter pilot number, ex: 1, 2, 3, etc.')
         i = str(id_pilot)
         mounts[int(i)] = mounts.pop(i)
         i = int(i)
@@ -140,7 +133,7 @@ class OneLearning:
                     factor=config.ReduceLROnPlateau.factor, 
                     min_lr=config.ReduceLROnPlateau.min_lr_coeff),  
                     # остальные параметры - смотри в functions.py
-                epochs=config.simpleRNN_epochs,  # 500,
+                epochs=config.simpleRNN_epochs,
                 verbose=config.simpleRNN_verbose
             )
             
@@ -149,6 +142,7 @@ class OneLearning:
 
         # создаём переменную для записи среднего значения предсказаний
         y_pred_train_nn = np.mean(mounts[i]['y_trn_nn_ch_list'], axis=0).argmax(axis=-1)
+        
         # сохраняем y_pred_train_n в словарь
         mounts[i]['y_pred_train_nn'] = tf.keras.utils.to_categorical(y_pred_train_nn)
 
@@ -169,8 +163,6 @@ class OneLearning:
             metrics=[f1], 
             optimizer='Adam',  # по умолчанию learning rate=10e-3
         )
-
-        # m_lstm = tf.keras.models.clone_model(model_lstm)
 
         history_lstm = model_lstm.fit(
             X_train_nn,
