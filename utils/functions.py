@@ -10,6 +10,11 @@ import tensorflow as tf
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 
+#from utils import one_learning
+from utils.data_reader import DataReader
+#from utils.inference import MakeInference
+
+
 # библиотека взаимодействия с интерпретатором
 if not sys.warnoptions:
     import warnings
@@ -76,7 +81,6 @@ def f1(y_true, y_pred):
     return 2 * ((precision * recall)/(precision + recall + K.epsilon()))
 
 
- 
 def callbacks(
     num_train, PATH_BEST_MODEL, monitor, verbose, mode, save_best_only,  #  for checkpoint
     stop_patience, restore_best_weights,  # for earlystop
@@ -132,3 +136,61 @@ def reset_random_seeds(seed_value):
     tf.random.set_seed(seed_value)
     np.random.seed(seed_value)
     random.seed(seed_value)
+
+
+def main_id_pilot(pr):
+    print(pr)
+    id_pilot = int(str(input('Введите 1, 2 или 3: ')))
+
+    if id_pilot not in (1, 2, 3):
+        id_pilot = int(str(input('\nВведите номер пилота 1, 2 или 3,\nдругой выбор - выйти: ')))
+
+    if id_pilot in (1, 2, 3):
+        print('\nПодождите, идет расчет...\n')
+    else:
+        id_pilot = False
+
+    return id_pilot
+
+
+def main():
+    config = {}
+    while True:
+        print('Выберите нужную опцию:\n'
+              '     1 - сделать предсказание для тестовых данных на основании предобученной модели,\n'
+              '     2 - обучить новую модель для произвольного пилота,\n'
+              '     3 - выйти.\n')
+
+        choice = str(input('Введите 1, 2 или 3: '))
+        if choice == '3':
+            break
+        elif choice not in ('1', '2', '3'):
+            continue
+
+        if not config:
+            path_to_config = 'config/data_config.json'
+            config = config_reader(path_to_config)
+
+        if choice == '1':
+            pr = '\nВведите номер пилота, по которому загрузить данные X_test\n' \
+                 'для получения predict с помощью уже обученной на данных этого пилота модели\n'
+
+            id_pilot = main_id_pilot(pr)
+            if not id_pilot:
+                break
+
+            path_to_X_test_dataset = config.PATH[3:] + config.mounts[str(id_pilot)].path_X_test_dataset
+            X_test_dataset = DataReader(path_to_X_test_dataset).data
+
+            # MakeInference.create_prediction(X_test_dataset, config, id_pilot)
+
+        elif choice == '2':
+            pr = '\nВведите номер пилота, по которому загрузить данные X_train и y_train\n' \
+                 'для обучения и сохранения обученной модели\n'
+
+            id_pilot = main_id_pilot(pr)
+            if not id_pilot:
+                break
+
+            # learning_pilot = one_learning.OneLearning(config)
+            # learning_pilot.save_lstm_model(id_pilot=id_pilot)
