@@ -142,7 +142,7 @@ def main_id_pilot(pr):
     """Функция выбора номера пилота для обучения модели
 
     Args:
-        pr (_type_): _description_
+        pr (_int_): номер пилота
 
     Returns:
         id_pilot (_int_): номер пилота
