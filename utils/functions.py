@@ -48,7 +48,7 @@ def f1(y_true, y_pred):
         y_pred (int): предсказанные данные в диапазоне [0, 1]
 
     Returns:
-        recall_res (np.float64): _description_
+        recall_res (np.float64): метрика f1-score
     """        
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
 
@@ -86,7 +86,7 @@ def callbacks(
     stop_patience, restore_best_weights,  # for earlystop
     factor, min_lr, reduce_patience,      # for reduce_lr
     ):
-    """Описание функции
+    """Функция управления этапами обучения модели
 
     Args:
         min_lr (_float_): нижняя граница learning rate, по которой обучение прекращается
@@ -139,6 +139,15 @@ def reset_random_seeds(seed_value):
 
 
 def main_id_pilot(pr):
+    """Функция выбора номера пилота для обучения модели
+
+    Args:
+        pr (_type_): _description_
+
+    Returns:
+        id_pilot (_int_): номер пилота
+    """    
+    
     print(pr)
     id_pilot = int(str(input('Введите 1, 2 или 3: ')))
 
@@ -154,7 +163,11 @@ def main_id_pilot(pr):
 
 
 def main():
-    config = {}
+    
+    """Description
+     
+    """    
+    config = {} 
     while True:
         print('Выберите нужную опцию:\n'
               '     1 - сделать предсказание для тестовых данных на основании предобученной модели,\n'
