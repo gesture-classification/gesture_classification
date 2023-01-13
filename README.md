@@ -116,10 +116,11 @@ python main.py
   <summary> Type in the console: </summary> <br>
 
 ```Python
-# Здесь будет описание как запустить проект в Docker
-1. Как запускается докер и создается образ
-2. Как создается контейнер
-3. Куда сохраняется результат предсказания
+# 1. Create a new image (its size is approximately 3.5 Gb)
+docker build -t myimage .
+
+#2. Run image in container
+docker run -d --name container1 myimage
 
 ```
 </details>
