@@ -6,6 +6,7 @@
 * [Project structure](README.md#Project-structure)
 * [Data and methods](README.md#Data-and-methods)
 * [Installation](README.md#Installation)
+* [Docker](README.md#Docker)
 * [Inference](README.md#Inference)
 * [Experimental data analysis](README.md#Experimental-data-analysis)
 * [Machine learning models structure](README.md#Machine-learning-models-structure)
@@ -104,10 +105,24 @@ git clone https://github.com/gesture-classification/gesture_classification
 pip install -r -q requirements.txt
  
 # 2. Make sure the experimental data X_train and X_test files are in the data folder. 
-# 3. Create the model.
+# 3. Create the model using main.py.
 
 python main.py
 ```
+
+
+## Docker
+<details>
+  <summary> Type in the console: </summary> <br>
+
+```Python
+# Здесь будет описание как запустить проект в Docker
+1. Как запускается докер и создается образ
+2. Как создается контейнер
+3. Куда сохраняется результат предсказания
+
+```
+</details>
 
 ## Inference
 <details>
