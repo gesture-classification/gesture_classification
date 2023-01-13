@@ -14,3 +14,6 @@ COPY ./main_inference.py ./main_inference.py
 RUN pip install --no-cache-dir -r ./requirements.txt
 
 CMD ["python", "./main_inference.py"]
+
+LABEL container.name='gesture' 
+
