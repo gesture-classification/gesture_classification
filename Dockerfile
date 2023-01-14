@@ -1,6 +1,6 @@
 FROM python:3.10
 
-WORKDIR /gesture_classification
+WORKDIR /MOTORICA/gesture_classification
 
 COPY ./config ./config	
 COPY ./data ./data
