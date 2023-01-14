@@ -1,6 +1,8 @@
 # Импортируем библиотеки
+import re
 import os
 import sys
+import glob
 import json
 import random
 from dotmap import DotMap
@@ -138,6 +140,22 @@ def reset_random_seeds(seed_value):
     random.seed(seed_value)
 
 
+def get_id_from_data():
+    id_pilot_numb_list = [] 
+    pattern = r'\d+'
+    pattern_2 = 'y_train_'
+
+    X_train_list = glob.glob('data\\X_train_*.npy')
+    files_list = os.listdir('data/')
+    
+    for item in X_train_list:
+        id_pilot_num = re.search(pattern, item)[0]
+        if pattern_2 + id_pilot_num + '.npy' in files_list:
+            id_pilot_numb_list.append(int(id_pilot_num))
+    
+    return id_pilot_numb_list
+
+
 def main_id_pilot(pr):
     """Функция выбора номера пилота для обучения модели
 
@@ -148,13 +166,14 @@ def main_id_pilot(pr):
         id_pilot (_int_): номер пилота
     """    
     
+    id_pilots_list = get_id_from_data()
     print(pr)
     id_pilot = int(str(input('Введите 1, 2 или 3: ')))
 
-    if id_pilot not in (1, 2, 3):
-        id_pilot = int(str(input('\nВведите номер пилота 1, 2 или 3,\nдругой выбор - выйти: ')))
+    if id_pilot not in id_pilots_list:#(1, 2, 3):
+        id_pilot = int(str(input(f'\nВведите номер пилота {id_pilots_list},\nдругой выбор - выйти: ')))
 
-    if id_pilot in (1, 2, 3):
+    if id_pilot in id_pilots_list:#(1, 2, 3):
         print('\nПодождите, идет расчет...\n')
     else:
         id_pilot = False
@@ -205,5 +224,5 @@ def main():
             if not id_pilot:
                 break
 
-            # learning_pilot = one_learning.OneLearning(config)
-            # learning_pilot.save_lstm_model(id_pilot=id_pilot)
+            #learning_pilot = one_learning.OneLearning(config)
+            #learning_pilot.save_lstm_model(id_pilot=id_pilot)
