@@ -4,17 +4,14 @@ import os
 import sys
 import glob
 import json
-import random
+#import random
 from dotmap import DotMap
-import numpy as np 
+#import numpy as np 
 
-import tensorflow as tf
-from keras import backend as K
-from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 
-#from utils import one_learning
+from utils import one_learning
 from utils.data_reader import DataReader
-#from utils.inference import MakeInference
+from utils.inference import MakeInference
 
 
 # библиотека взаимодействия с интерпретатором
@@ -42,102 +39,102 @@ def config_reader(path_to_json_conf: str) -> dict:
     return config
 
 
-def f1(y_true, y_pred):
-    """Функция для расчета метрики f1_score, Precision, Recall
+# def f1(y_true, y_pred):
+#     """Функция для расчета метрики f1_score, Precision, Recall
     
-    Args:
-        y_true (int): исходные данные в диапазоне [0, 1]
-        y_pred (int): предсказанные данные в диапазоне [0, 1]
+#     Args:
+#         y_true (int): исходные данные в диапазоне [0, 1]
+#         y_pred (int): предсказанные данные в диапазоне [0, 1]
 
-    Returns:
-        recall_res (np.float64): метрика f1-score
-    """        
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+#     Returns:
+#         recall_res (np.float64): метрика f1-score
+#     """        
+#     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
 
-    def recall(y_true, y_pred):
-        """
-        Recall metric.
-        Only computes a batch-wise average of recall.
-        Computes the recall, a metric for multi-label classification of
-        how many relevant items are selected.
-        see: https://stackoverflow.com/questions/66554207/calculating-micro-f-1-score-in-keras
-        """
-        possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-        recall_res = true_positives / (possible_positives + K.epsilon())
-        return recall_res
+#     def recall(y_true, y_pred):
+#         """
+#         Recall metric.
+#         Only computes a batch-wise average of recall.
+#         Computes the recall, a metric for multi-label classification of
+#         how many relevant items are selected.
+#         see: https://stackoverflow.com/questions/66554207/calculating-micro-f-1-score-in-keras
+#         """
+#         possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+#         recall_res = true_positives / (possible_positives + K.epsilon())
+#         return recall_res
 
-    def precision(y_true, y_pred):
-        """
-        Precision metric.
-        Only computes a batch-wise average of precision.
-        Computes the precision, a metric for multi-label classification of
-        how many selected items are relevant.
-        """
-        predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
-        precision_res = true_positives/(predicted_positives + K.epsilon())
-        return precision_res
+#     def precision(y_true, y_pred):
+#         """
+#         Precision metric.
+#         Only computes a batch-wise average of precision.
+#         Computes the precision, a metric for multi-label classification of
+#         how many selected items are relevant.
+#         """
+#         predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+#         precision_res = true_positives/(predicted_positives + K.epsilon())
+#         return precision_res
 
-    precision = precision(y_true, y_pred)
-    recall = recall(y_true, y_pred)
+#     precision = precision(y_true, y_pred)
+#     recall = recall(y_true, y_pred)
 
-    return 2 * ((precision * recall)/(precision + recall + K.epsilon()))
+#     return 2 * ((precision * recall)/(precision + recall + K.epsilon()))
 
 
-def callbacks(
-    num_train, PATH_BEST_MODEL, monitor, verbose, mode, save_best_only,  #  for checkpoint
-    stop_patience, restore_best_weights,  # for earlystop
-    factor, min_lr, reduce_patience,      # for reduce_lr
-    ):
-    """Функция управления этапами обучения модели
+# def callbacks(
+#     num_train, PATH_BEST_MODEL, monitor, verbose, mode, save_best_only,  #  for checkpoint
+#     stop_patience, restore_best_weights,  # for earlystop
+#     factor, min_lr, reduce_patience,      # for reduce_lr
+#     ):
+#     """Функция управления этапами обучения модели
 
-    Args:
-        min_lr (_float_): нижняя граница learning rate, по которой обучение прекращается
-        num_train (_int_): номер пилота
-        monitor (str) - значение метрики 
-        mode (str)- режим работы функции {"auto", "min", "max"}. Max - остановка обучения, когда метрика не увеличивается; 
-        reduce_patience (_int_): количество эпох, после которого learning rate снижается в случае, если метрика не улучшается.
-        stop_patience (_int_):  количество эпох, после которого обучение останавливается, если метрика не улучшается.
-        PATH_BEST_MODEL (_str_): путь сохранения лучшей модели (из конфига).
-        save_best_only (bool): Если True, то сохраняет только модели с лучшим скором.
-    """      
+#     Args:
+#         min_lr (_float_): нижняя граница learning rate, по которой обучение прекращается
+#         num_train (_int_): номер пилота
+#         monitor (str) - значение метрики 
+#         mode (str)- режим работы функции {"auto", "min", "max"}. Max - остановка обучения, когда метрика не увеличивается; 
+#         reduce_patience (_int_): количество эпох, после которого learning rate снижается в случае, если метрика не улучшается.
+#         stop_patience (_int_):  количество эпох, после которого обучение останавливается, если метрика не улучшается.
+#         PATH_BEST_MODEL (_str_): путь сохранения лучшей модели (из конфига).
+#         save_best_only (bool): Если True, то сохраняет только модели с лучшим скором.
+#     """      
     
-    # сохранение лучшей модели
-    checkpoint = ModelCheckpoint(
-        os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
-        monitor=monitor, 
-        verbose=verbose, 
-        mode=mode, 
-        save_best_only=save_best_only
-    )
+#     # сохранение лучшей модели
+#     checkpoint = ModelCheckpoint(
+#         os.path.join(PATH_BEST_MODEL, 'best_model_rnn_' + str(num_train) + '.hdf5'), 
+#         monitor=monitor, 
+#         verbose=verbose, 
+#         mode=mode, 
+#         save_best_only=save_best_only
+#     )
 
-    # остановка обучения при отсутствии улучшения заданной метрики
-    earlystop = EarlyStopping(
-        monitor=monitor, 
-        mode=mode, 
-        patience=stop_patience, 
-        restore_best_weights=restore_best_weights
-    )
+#     # остановка обучения при отсутствии улучшения заданной метрики
+#     earlystop = EarlyStopping(
+#         monitor=monitor, 
+#         mode=mode, 
+#         patience=stop_patience, 
+#         restore_best_weights=restore_best_weights
+#     )
 
-    # снижение learning rate при отсутствии улучшения заданной метрики 
-    reduce_lr = ReduceLROnPlateau(
-        monitor=monitor, 
-        mode=mode,  
-        factor=factor, 
-        patience=reduce_patience,  # можно 10
-        verbose=verbose, 
-        min_lr=min_lr
-    )
+#     # снижение learning rate при отсутствии улучшения заданной метрики 
+#     reduce_lr = ReduceLROnPlateau(
+#         monitor=monitor, 
+#         mode=mode,  
+#         factor=factor, 
+#         patience=reduce_patience,  # можно 10
+#         verbose=verbose, 
+#         min_lr=min_lr
+#     )
     
-    return [checkpoint, earlystop, reduce_lr]
+#     return [checkpoint, earlystop, reduce_lr]
 
 
-def reset_random_seeds(seed_value):
-    """Функция задания seed
-    """
-    os.environ['PYTHONHASHSEED'] = str(seed_value)
-    tf.random.set_seed(seed_value)
-    np.random.seed(seed_value)
-    random.seed(seed_value)
+# def reset_random_seeds(seed_value):
+#     """Функция задания seed
+#     """
+#     os.environ['PYTHONHASHSEED'] = str(seed_value)
+#     tf.random.set_seed(seed_value)
+#     np.random.seed(seed_value)
+#     random.seed(seed_value)
 
 
 def get_id_from_data():
@@ -156,22 +153,23 @@ def get_id_from_data():
     return id_pilot_numb_list
 
 
-def main_id_pilot(pr):
+def main_id_pilot(id_pilot_selected):
     """Функция выбора номера пилота для обучения модели
 
     Args:
-        pr (_int_): номер пилота
+        id_pilot_selected (_int_): номер пилота
 
     Returns:
         id_pilot (_int_): номер пилота
     """    
     
     id_pilots_list = get_id_from_data()
-    print(pr)
-    id_pilot = int(str(input('Введите 1, 2 или 3: ')))
+    print(id_pilot_selected)
+    id_pilot = int(str(input(f'Введите номер пилота из списка {id_pilots_list}: ')))
 
     if id_pilot not in id_pilots_list:#(1, 2, 3):
-        id_pilot = int(str(input(f'\nВведите номер пилота {id_pilots_list},\nдругой выбор - выйти: ')))
+        id_pilot = int(str(
+            input(f'\nВведите номер пилота из списка {id_pilots_list},\nдругой выбор - выйти: ')))
 
     if id_pilot in id_pilots_list:#(1, 2, 3):
         print('\nПодождите, идет расчет...\n')
@@ -181,7 +179,7 @@ def main_id_pilot(pr):
     return id_pilot
 
 
-def main():
+def get_train_inference_calcs():
     
     """Description
      
@@ -214,7 +212,7 @@ def main():
             path_to_X_test_dataset = config.PATH[3:] + config.mounts[str(id_pilot)].path_X_test_dataset
             X_test_dataset = DataReader(path_to_X_test_dataset).data
 
-            # MakeInference.create_prediction(X_test_dataset, config, id_pilot)
+            MakeInference.create_prediction(X_test_dataset, config, id_pilot)
 
         elif choice == '2':
             pr = '\nВведите номер пилота, по которому загрузить данные X_train и y_train\n' \
@@ -224,5 +222,5 @@ def main():
             if not id_pilot:
                 break
 
-            #learning_pilot = one_learning.OneLearning(config)
-            #learning_pilot.save_lstm_model(id_pilot=id_pilot)
+            learning_pilot = one_learning.OneLearning(config)
+            learning_pilot.save_lstm_model(id_pilot=id_pilot)

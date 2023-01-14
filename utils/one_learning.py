@@ -14,7 +14,7 @@ import random
 # from comet_ml import Experiment
 
 # Библиотека вызова функций, специально разработанных для данного ноутбука
-from utils.functions import f1, callbacks, reset_random_seeds
+from utils.models_utils import f1, callbacks, reset_random_seeds
 from utils.data_reader import DataReader
 from utils.data_loader import DataLoader
 

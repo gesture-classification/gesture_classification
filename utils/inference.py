@@ -3,7 +3,7 @@ import csv
 import numpy as np
 from tensorflow import keras
 
-from utils.functions import f1
+from utils.models_utils import f1
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
