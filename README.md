@@ -120,7 +120,6 @@ python main.py
 docker build -t myimage .
 
 #2. Run image in container
-docker run -d --name container1 myimage
 docker run -ti --name container1 -v $PWD/:/MOTORICA/gesture_classification myimage
 
 ```

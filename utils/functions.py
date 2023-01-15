@@ -1,5 +1,9 @@
 # Импортируем библиотеки
-import re, os, sys, glob, json
+import re
+import os
+import sys
+import glob
+import json
 from dotmap import DotMap
 
 
