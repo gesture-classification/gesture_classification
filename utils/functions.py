@@ -41,7 +41,7 @@ def get_id_from_data():
     """Функция загрузки номеров пилотов из данных в папке data
 
     Returns:
-        id_pilot_numb_list (_int_): номера пилотов
+        id_pilot_numb_list (_int_): список с номерами пилотов
     """    
     id_pilot_numb_list = [] 
     pattern = r'\d+'
@@ -58,18 +58,18 @@ def get_id_from_data():
     return id_pilot_numb_list
 
 
-def main_id_pilot(id_pilot_selected):
+def choice_id_pilot(id_request: str) -> int:
     """Функция выбора номера пилота для обучения модели
 
     Args:
-        id_pilot_selected (_int_): номер пилота
+        id_request (_str_): текст запроса на выбор номера пилота согласно опции
 
     Returns:
         id_pilot (_int_): номер пилота
     """    
     
     id_pilots_list = get_id_from_data()
-    print(id_pilot_selected)
+    print(id_request)
     id_pilot = int(str(input(f'Введите номер пилота из списка {id_pilots_list}: ')))
 
     if id_pilot not in id_pilots_list:   #(1, 2, 3):
@@ -84,8 +84,8 @@ def main_id_pilot(id_pilot_selected):
     return id_pilot
 
 
-def get_train_inference_calcs():
-    """Функция выбора: обучение модели или инференса для одного пилота. 
+def choice_train_inference():
+    """Функция выбора: обучение модели или получение инференса для одного пилота.
     В зависимости от выбора пользователя:
     -------------
     1 - predictions.csv - предсказание на тестовых данных
@@ -114,7 +114,7 @@ def get_train_inference_calcs():
             pr = '\nВведите номер пилота, по которому загрузить данные X_test\n' \
                  'для получения predict с помощью уже обученной на данных этого пилота модели\n'
 
-            id_pilot = main_id_pilot(pr)
+            id_pilot = choice_id_pilot(pr)
             if not id_pilot:
                 break
 
@@ -127,7 +127,7 @@ def get_train_inference_calcs():
             pr = '\nВведите номер пилота, по которому загрузить данные X_train и y_train\n' \
                  'для обучения и сохранения обученной модели\n'
 
-            id_pilot = main_id_pilot(pr)
+            id_pilot = choice_id_pilot(pr)
             if not id_pilot:
                 break
 
