@@ -124,6 +124,10 @@ docker run -ti --name container1 -v $PWD/:/MOTORICA/gesture_classification myima
 
 # 3. Chose option 1 and predict the data. In the progect directory will appear 
 # a new file 'predictions.csv'
+
+# 4. Delete the container and image after usage
+docker rm container1
+docker rmi myimage
 ```
 </details>
 
