@@ -142,8 +142,8 @@ def get_id_from_data():
     pattern = r'\d+'
     pattern_2 = 'y_train_'
 
-    X_train_list = glob.glob('data\\X_train_*.npy')
-    files_list = os.listdir('data/')
+    X_train_list = glob.glob('data/X_train_*.npy')
+    files_list = os.listdir('data')
     
     for item in X_train_list:
         id_pilot_num = re.search(pattern, item)[0]
@@ -167,11 +167,11 @@ def main_id_pilot(id_pilot_selected):
     print(id_pilot_selected)
     id_pilot = int(str(input(f'Введите номер пилота из списка {id_pilots_list}: ')))
 
-    if id_pilot not in id_pilots_list:#(1, 2, 3):
+    if id_pilot not in id_pilots_list: #(1, 2, 3):
         id_pilot = int(str(
             input(f'\nВведите номер пилота из списка {id_pilots_list},\nдругой выбор - выйти: ')))
 
-    if id_pilot in id_pilots_list:#(1, 2, 3):
+    if id_pilot in id_pilots_list: #(1, 2, 3):
         print('\nПодождите, идет расчет...\n')
     else:
         id_pilot = False
