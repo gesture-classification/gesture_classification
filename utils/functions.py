@@ -47,7 +47,7 @@ def get_id_from_data():
     pattern = r'\d+'
     pattern_2 = 'y_train_'
 
-    X_train_list = glob.glob('data\X_train_*.npy')
+    X_train_list = glob.glob('data/X_train_*.npy')
     files_list = os.listdir('data')
     
     for item in X_train_list:
