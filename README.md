@@ -119,9 +119,11 @@ python main.py
 # 1. Create a new image (its size is approximately 3.5 Gb)
 docker build -t myimage .
 
-#2. Run image in container
+# 2. Run image in container.
 docker run -ti --name container1 -v $PWD/:/MOTORICA/gesture_classification myimage
 
+# 3. Chose option 1 and predict the data. In the progect directory will appear 
+# a new file 'predictions.csv'
 ```
 </details>
 
