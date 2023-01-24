@@ -5,7 +5,7 @@ import sys
 import glob
 import json
 from dotmap import DotMap
-
+import numpy as np
 
 from utils import one_learning
 from utils.data_reader import DataReader
@@ -133,3 +133,50 @@ def choice_train_inference():
 
             learning_pilot = one_learning.OneLearning(config)
             learning_pilot.save_lstm_model(id_pilot=id_pilot)
+
+def search_five_element(array_predicted, start_counter, y_start, y_end):
+    if y_start > y_end:
+        start_counter = array_predicted.size
+        
+        # Условие, когда класс до ступеньки больше, чем класс после
+        while start_counter > 0 :
+            
+            # ищем 5 элементов, неравных нулю
+            if y_start == np.mean(array_predicted[start_counter-5:start_counter]):
+                return(start_counter)
+            else:
+                start_counter -= 1
+        
+    else:
+        # Условие, когда класс до ступеньки меньше, чем класс после
+        while start_counter < array_predicted.size:
+            # ищем 5 элементов, неравных нулю
+            if y_end == np.mean(array_predicted[start_counter:start_counter+5]):
+                return(start_counter)
+            else:
+                start_counter += 1
+                    
+def make_best_step(ii, mounts, Pilot_id, x_trn_pred_dict):
+    #mounts[id_pilot]['y_train_nn'][ii].argmax(axis=-1)
+    #y_pred_train_nn = mounts[Pilot_id]['y_pred_train_nn']
+    
+    y_pred_train_nn_mean = np.mean(x_trn_pred_dict[Pilot_id], axis=0)
+    
+    # Первый и последний элемент y_train
+    y_start = mounts[Pilot_id]['y_train_nn'][ii].argmax(axis=-1)[5]
+    y_end = mounts[Pilot_id]['y_train_nn'][ii].argmax(axis=-1)[-5]
+    
+    # Ступенька в y_train_nn
+    start_counter = np.nonzero(np.diff(mounts[Pilot_id]['y_train_nn'][ii].argmax(axis=-1)))[0][0] + 1
+    
+    # Смотрим тестовый массив
+    array_predicted = y_pred_train_nn_mean[ii].argmax(axis=-1)
+                
+    predicted_step = search_five_element(array_predicted=array_predicted, start_counter=start_counter, y_start=y_start, y_end=y_end)
+
+    # Обрабатываем ступеньку
+    best_step = np.zeros(array_predicted.size, np.int16)
+    best_step[0:predicted_step] = y_start
+    best_step[predicted_step:] = y_end
+    
+    return best_step
