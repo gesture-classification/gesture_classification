@@ -91,7 +91,7 @@ $^1$ Optomyography (OMG) is a method of monitoring muscle activity with optical 
 The experiment details were as follows: since every operator takes some time between receiving a comand and performing a gesture, it can be seen a gap between the two line graphs below. The lower graph illustrates commands to perform gesture operator received while at the upper graph sensor logs are represented. Each gesture was started or ended with the "open palm" gesture. To simplify recognition, from the whole possible variety of human hand gestures only distinctive ones with clenching or unclenching fingers were considered.
 When the data collection was completed the whole dataset from every operator was split into 2 parts, and the sequence of original data was saved into arrays X_train (1st graph) with y_train (2nd graph) and X_test (1st graph) respectively.
 
-![Experimental dara](/logs_and_figures/fig_2-1.png)
+![Experimental data](/logs_and_figures/fig_2-1.png)
 <p align="center">Fig.1-2 - Experimental data of pilot #3.</p>
 
 :arrow_up:[ to contents](README.md#Contents)
