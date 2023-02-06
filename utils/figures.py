@@ -163,7 +163,7 @@ def get_active_passive_sensors_plot(Pilot_id: int, timesteps: list, mounts: dict
         'x': 0.5, 'y': 0.05}
     )
 
-    fig.update_layout(width=1000, height=400, legend_title_text='Номер датчика',
+    fig.update_layout(width=1000, height=400, legend_title_text='Sensor',
                     xaxis_title_text='Period',
                     yaxis_title_text='Sensor signal',
                     yaxis_range=[0, 4000],
