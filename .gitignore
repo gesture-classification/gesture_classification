@@ -49,3 +49,6 @@ credentials.json
 
 # Результат запуска инференса
 predictions.csv
+
+# Readme in Russian
+README_ru.md
