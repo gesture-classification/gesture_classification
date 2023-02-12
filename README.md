@@ -212,7 +212,7 @@ As can be seen from Fig.2-2, the predictive quality of the classification task d
 
 The u-shape pattern of the learning curve in Fig.2-3 indicates the model overfitting. Non-optimally chosen parameters are leading to an increase in the learning time and growth of prediction errors. Meanwhile, it reached fair model quality predicting correctly some of 2/3 of datapoints  (f1-score is 0.69632). The result can be seen in the graph provided below.
 
-
+![Gesture prediction](/logs_and_figures/fig_2-6.png)
 
 <p align="center">  Fig.2-4 - Original signals and gesture classification </p>
 
