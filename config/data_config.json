@@ -95,7 +95,7 @@
  
   "//": "Модель LSTM",
   "lstm_units" : 100,
-  "lstm_epochs" : 1500,
+  "lstm_epochs" : 700,
   "lstm_val_splt" : 0.2,
   "lstm_verbose" : 1
 }
